@@ -5,10 +5,10 @@ publishDate: 2026-06-03
 stack: ["JavaScript", "Canvas", "Game AI"]
 tags: ["ia", "npc", "pédagogie", "widget"]
 demoUrl: "https://studioalbert.github.io/widgets/_widgets/utility_ai.html"
-demoHeight: 700
+demoHeight: 760
 repoUrl: "https://github.com/StudioAlbert/widgets"
 featured: false
-draft: true
+draft: false
 ---
 
 Support de cours sur l'**Utility AI** : une approche de décision où chaque action reçoit un score continu calculé via une **courbe de réponse** (linéaire, quadratique, logistique…). Le NPC choisit ensuite l'action au meilleur score.
