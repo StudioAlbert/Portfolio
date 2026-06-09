@@ -20,6 +20,7 @@ const meta = {
 <PageLayout meta={meta}>
 	<div class="resume-layout">
 		<aside class="sidebar" aria-label="Coordonnées">
+			<div class="profile-photo"><img src="/photo.jpg" alt={authorName} /></div>
 			<h1>{authorName}</h1>
 			{profile?.jobTitle && <p class="job-title">{profile.jobTitle}</p>}
 			<p class="location">Lyon, France</p>
@@ -52,7 +53,7 @@ const meta = {
 				<li><a href="/projects/" class="contact-plain">Projets</a></li>
 			</ul>
 
-			<button type="button" class="print-cv">Télécharger en PDF</button>
+			<a class="print-cv" href="/CV_Sebastien_Albert.pdf" download>Télécharger en PDF</a>
 		</aside>
 
 		<article class="bio">
@@ -92,25 +93,6 @@ const meta = {
 			});
 		});
 
-		// --- Impression / PDF : tout déplier avant impression, restaurer après ---
-		let prevOpen = null;
-		const expandForPrint = () => {
-			prevOpen = Array.from(items).map((d) => d.hasAttribute("open"));
-			items.forEach((d) => d.setAttribute("open", ""));
-		};
-		const restoreAfterPrint = () => {
-			if (!prevOpen) return;
-			items.forEach((d, i) => {
-				if (prevOpen[i]) d.setAttribute("open", "");
-				else d.removeAttribute("open");
-			});
-			prevOpen = null;
-		};
-		window.addEventListener("beforeprint", expandForPrint);
-		window.addEventListener("afterprint", restoreAfterPrint);
-
-		const printBtn = document.querySelector(".print-cv");
-		if (printBtn) printBtn.addEventListener("click", () => window.print());
 	})();
 </script>
 
@@ -141,6 +123,23 @@ const meta = {
 		background: hsl(var(--theme-text) / 0.04);
 		border: 1px solid hsl(var(--theme-text) / 0.12);
 		border-radius: 6px;
+	}
+	.sidebar .profile-photo {
+		width: 120px;
+		height: 120px;
+		border-radius: 50%;
+		margin: 0 auto 16px;
+		border: 2px solid hsl(var(--theme-text) / 0.15);
+		overflow: hidden;
+	}
+	.sidebar .profile-photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 22%;
+		transform: scale(1.6);
+		transform-origin: center 22%;
+		display: block;
 	}
 	.sidebar h1 {
 		font-family: var(--font-serif);
@@ -199,6 +198,7 @@ const meta = {
 		padding-left: 22px;
 	}
 	.print-cv {
+		display: block;
 		margin-top: 20px;
 		width: 100%;
 		background: transparent;
@@ -209,6 +209,8 @@ const meta = {
 		padding: 7px 12px;
 		border-radius: 4px;
 		cursor: pointer;
+		text-align: center;
+		text-decoration: none;
 		transition: color 0.2s ease, border-color 0.2s ease;
 	}
 	.print-cv:hover {
