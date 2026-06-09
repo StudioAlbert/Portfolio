@@ -5,6 +5,7 @@ import PageLayout from "@/layouts/Base.astro";
 import { siteConfig } from "@/site-config";
 import { formatRailDate, formatStampDate } from "@/utils/date";
 import { absoluteUrl, withBase } from "@/utils/path";
+import { contactIcons } from "@/data/icons";
 import { Schema } from "astro-seo-schema";
 
 const allPosts = await getAllPosts();
@@ -21,6 +22,28 @@ const projects = (await getCollection("project", ({ data }) => import.meta.env.P
 
 const profile = siteConfig.profile;
 const siteUrl = (path: string) => absoluteUrl(path, Astro.site);
+
+type ContactLink = { label: string; href: string; external: boolean; svg: string };
+const contactLinks: ContactLink[] = [
+	profile?.github && {
+		label: "GitHub",
+		href: profile.github,
+		external: true,
+		svg: contactIcons.github,
+	},
+	profile?.linkedin && {
+		label: "LinkedIn",
+		href: profile.linkedin,
+		external: true,
+		svg: contactIcons.linkedin,
+	},
+	profile?.email && {
+		label: "Email",
+		href: `mailto:${profile.email}`,
+		external: false,
+		svg: contactIcons.email,
+	},
+].filter(Boolean) as ContactLink[];
 ---
 
 <Schema
@@ -58,29 +81,61 @@ const siteUrl = (path: string) => absoluteUrl(path, Astro.site);
 
 <PageLayout meta={{ title: "Home", description: siteConfig.description }}>
 	<section class="hero">
-		<p>{siteConfig.description}</p>
-		<div class="socials">
-			{profile?.github && (
-				<>
-					<a href={profile.github} rel="noreferrer" target="_blank">GitHub</a>
-					<span class="sep">·</span>
-				</>
-			)}
-			{profile?.linkedin && (
-				<>
-					<a href={profile.linkedin} rel="noreferrer" target="_blank">LinkedIn</a>
-					<span class="sep">·</span>
-				</>
-			)}
-			{profile?.email && (
-				<>
-					<a href={`mailto:${profile.email}`}>Email</a>
-					<span class="sep">·</span>
-				</>
-			)}
-			<a href={withBase("/rss.xml")}>RSS</a>
-		</div>
+		<h1 class="hero-name">{profile?.name ?? siteConfig.author}</h1>
+		{profile?.jobTitle && <p class="hero-role">{profile.jobTitle}</p>}
+		<p class="hero-tagline">{siteConfig.description}</p>
+		<ul class="creds" aria-label="Certifications & rôles">
+			<li class="cred cred--accent">Unity Certified Expert — Programmer</li>
+			<li class="cred">Enseignant & Coordinateur académique · SAE Genève</li>
+		</ul>
+		<ul class="contact" aria-label="Contact">
+			{contactLinks.map((c) => (
+				<li>
+					<a
+						href={c.href}
+						{...(c.external ? { rel: "noreferrer", target: "_blank" } : {})}
+					>
+						<span class="contact-icon" set:html={c.svg} />
+						<span>{c.label}</span>
+					</a>
+				</li>
+			))}
+		</ul>
 	</section>
+
+	<section class="teaching" aria-labelledby="experience-label">
+		<div class="section-label" id="experience-label">Expérience</div>
+		<p>
+			Enseignant &amp; coordinateur académique de la section Games Programming à
+			<strong>SAE Institute Genève</strong> — conception de cursus, encadrement de
+			projets, masterclasses.
+		</p>
+		<a class="teaching-link" data-astro-prefetch href={withBase("/resume/")}>
+			Voir le parcours complet →
+		</a>
+	</section>
+
+	{projects.length > 0 && (
+		<section class="work" aria-labelledby="work-label">
+			<div class="section-label" id="work-label">Projets</div>
+			<ul class="work-list">
+				{projects.map((p, idx) => (
+					<li style={`--i: ${idx + 1}`}>
+						<a href={withBase(`/projects/${p.id}/`)}>
+							<div class="head">
+								<span class="name">{p.data.title}</span>
+								{p.data.stack.length > 0 && (
+									<span class="stack">{p.data.stack.join(" · ")}</span>
+								)}
+								{p.data.featured && <span class="badge">Featured</span>}
+							</div>
+							<p>{p.data.description}</p>
+						</a>
+					</li>
+				))}
+			</ul>
+		</section>
+	)}
 
 	<section class="writing" aria-labelledby="writing-label">
 		<div class="section-label" id="writing-label">Writing</div>
@@ -147,28 +202,6 @@ const siteUrl = (path: string) => absoluteUrl(path, Astro.site);
 			</div>
 		</div>
 	</section>
-
-	{projects.length > 0 && (
-		<section class="work" aria-labelledby="work-label">
-			<div class="section-label" id="work-label">Projets</div>
-			<ul class="work-list">
-				{projects.map((p, idx) => (
-					<li style={`--i: ${idx + 1}`}>
-						<a href={withBase(`/projects/${p.id}/`)}>
-							<div class="head">
-								<span class="name">{p.data.title}</span>
-								{p.data.stack.length > 0 && (
-									<span class="stack">{p.data.stack.join(" · ")}</span>
-								)}
-								{p.data.featured && <span class="badge">Featured</span>}
-							</div>
-							<p>{p.data.description}</p>
-						</a>
-					</li>
-				))}
-			</ul>
-		</section>
-	)}
 </PageLayout>
 
 <style>
@@ -176,22 +209,66 @@ const siteUrl = (path: string) => absoluteUrl(path, Astro.site);
 	.hero {
 		margin-bottom: 88px;
 	}
-	.hero p {
+	.hero-name {
+		font-family: var(--font-serif);
+		font-size: 38px;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.05;
+		color: hsl(var(--theme-text));
+		margin: 0 0 6px;
+	}
+	.hero-role {
+		font-family: var(--font-sans);
+		font-size: 15px;
+		color: hsl(var(--theme-accent));
+		margin: 0 0 22px;
+	}
+	.hero-tagline {
 		font-size: 19.5px;
 		line-height: 1.65;
 		color: hsl(var(--theme-text));
 		margin: 0 0 22px;
 		max-width: 60ch;
 		text-wrap: pretty;
-		white-space: pre-line;
 	}
-	.socials {
+	.creds {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 0;
+		margin: 0 0 4px;
+	}
+	.cred {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		letter-spacing: 0.02em;
+		line-height: 1.4;
+		color: hsl(var(--theme-text) / 0.8);
+		padding: 3px 10px;
+		border: 1px solid var(--hairline);
+		border-radius: 999px;
+		white-space: nowrap;
+	}
+	.cred--accent {
+		color: hsl(var(--theme-accent));
+		border-color: hsl(var(--theme-accent) / 0.55);
+	}
+	.contact {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 20px;
+		padding: 0;
+		margin: 18px 0 0;
 		font-family: var(--font-sans);
 		font-size: 13.5px;
-		color: hsl(var(--theme-text) / 0.72);
-		margin-top: 18px;
 	}
-	.socials a {
+	.contact a {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
 		color: hsl(var(--theme-text-muted));
 		text-decoration: underline;
 		text-decoration-color: hsl(var(--theme-text) / 0.35);
@@ -199,13 +276,58 @@ const siteUrl = (path: string) => absoluteUrl(path, Astro.site);
 		text-underline-offset: 3px;
 		transition: color 0.2s ease, text-decoration-color 0.2s ease;
 	}
-	.socials a:hover {
+	.contact a:hover {
 		color: hsl(var(--theme-accent));
 		text-decoration-color: hsl(var(--theme-accent));
 	}
-	.socials .sep {
-		color: var(--faint);
-		margin: 0 9px;
+	.contact a:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+	.contact-icon {
+		display: inline-flex;
+	}
+	.contact-icon :global(svg) {
+		width: 16px;
+		height: 16px;
+	}
+
+	/* ---------- Teaching highlight ---------- */
+	.teaching {
+		margin-bottom: 88px;
+	}
+	.teaching p {
+		font-size: 17px;
+		line-height: 1.62;
+		color: hsl(var(--theme-text-muted));
+		margin: 0 0 14px;
+		max-width: 60ch;
+		text-wrap: pretty;
+	}
+	.teaching p strong {
+		color: hsl(var(--theme-text));
+		font-weight: 600;
+	}
+	.teaching-link {
+		display: inline-block;
+		font-family: var(--font-sans);
+		font-size: 13.5px;
+		color: hsl(var(--theme-text-muted));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition: color 0.2s ease, text-decoration-color 0.2s ease;
+	}
+	.teaching-link:hover {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+	.teaching-link:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
 	}
 
 	/* ---------- Writing timeline ---------- */
@@ -285,7 +407,6 @@ const siteUrl = (path: string) => absoluteUrl(path, Astro.site);
 		margin-bottom: 88px;
 	}
 
-	.socials a:focus-visible,
 	.archive-link a:focus-visible {
 		outline: 2px solid hsl(var(--theme-accent));
 		outline-offset: 3px;
@@ -296,7 +417,10 @@ const siteUrl = (path: string) => absoluteUrl(path, Astro.site);
 		.hero {
 			margin-bottom: 64px;
 		}
-		.hero p {
+		.hero-name {
+			font-size: 32px;
+		}
+		.hero-tagline {
 			font-size: 18px;
 		}
 		.post.featured .post-rail {
@@ -330,14 +454,21 @@ const siteUrl = (path: string) => absoluteUrl(path, Astro.site);
 		.hero {
 			margin-bottom: 48px;
 		}
-		.hero p {
+		.hero-name {
+			font-size: 26px;
+		}
+		.hero-tagline {
 			font-size: 17px;
 		}
-		.socials {
+		.contact {
 			font-size: 12.5px;
+			gap: 8px 16px;
 		}
-		.socials .sep {
-			margin: 0 6px;
+		.teaching {
+			margin-bottom: 56px;
+		}
+		.teaching p {
+			font-size: 15.5px;
 		}
 		.writing {
 			margin-bottom: 64px;

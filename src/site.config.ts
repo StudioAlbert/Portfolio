@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 		},
 	},
 	description:
-		"Portfolio de Sebastien Albert — CV, notes de blog, et projets (dont des démos Unity jouables).",
+		"Je conçois le gameplay et l'IA des jeux, et je forme les programmeurs de demain.",
 	lang: "fr-FR",
 	ogLocale: "fr_FR",
 	sortPostsByUpdatedDate: false,
@@ -23,7 +23,7 @@ export const siteConfig: SiteConfig = {
 		email: "s.albert@sae.edu",
 		github: "https://github.com/StudioAlbert",
 		linkedin: "https://www.linkedin.com/in/sebastien-alber-5775804/",
-		jobTitle: "Gameplay & AI programmer",
+		jobTitle: "Programmeur Gameplay & IA",
 		employer: "SAE Institute",
 		employerUrl: "https://www.sae.edu",
 		alumni: "",

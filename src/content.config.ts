@@ -66,6 +66,8 @@ const project = defineCollection({
 			tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
 			// Unity WebGL build folder served from /public, or external URL (itch.io, etc.)
 			demoUrl: z.string().optional(),
+			// Hauteur fixe de l'iframe démo en px (sinon ratio 16:9). Utile pour les widgets verticaux.
+			demoHeight: z.number().optional(),
 			repoUrl: z.string().url().optional(),
 			featured: z.boolean().default(false),
 			draft: z.boolean().default(false),

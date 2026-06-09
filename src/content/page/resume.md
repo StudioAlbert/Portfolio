@@ -1,11 +1,11 @@
 ---
 title: CV
-description: Sébastien Albert — Gameplay & AI programmer, Unity Certified Expert, enseignant en programmation de jeu (SAE Genève).
+description: Sébastien Albert — Programmeur Gameplay & IA, Unity Certified Expert, Enseignant & Coordinateur académique — Games Programming, SAE Institute Genève.
 ---
 
-Enseignant Games Programming (C++ / C# / Unity) à SAE Institute Genève et fondateur du Studio Albert (Lyon). 
+Programmeur Gameplay & IA et Unity Certified Expert, enseignant & coordinateur académique en programmation de jeux à SAE Institute Genève et fondateur du Studio Albert (Lyon). Je conçois gameplay, IA de jeu et génération procédurale — et les cursus qui forment celles et ceux qui les coderont.
 
-Mon terrain de jeu : **gameplay**, **IA de jeu** (NPCs autonomes, behaviour trees) et **génération procédurale**. 
+**Expertise** : gameplay, **IA de jeu** (NPCs autonomes, behaviour trees) et **génération procédurale**.
 
 Background mixte développement logiciel, 3D / VFX et installations interactives.
 
@@ -13,6 +13,7 @@ Background mixte développement logiciel, 3D / VFX et installations interactives
 
 - **Game programming** — C#, C++
 	- Gameplay, NPC Programming, Generation procédurale, VR / AR / XR
+- **Autres langages & frameworks** — WinDev, JavaScript / P5.js, Processing
 - **Post-processing** — Suite Adobe vidéo, Da Vinci
 - **Modélisation 3D** — Maya, Softimage XSI
 - Pédagogie, encadrement de projets, gestion de projet, coordination
@@ -23,7 +24,7 @@ Background mixte développement logiciel, 3D / VFX et installations interactives
 
 ## Expérience
 
-### Enseignant Games Programming — C++ / C# / Unity
+### Enseignant & Coordinateur académique — section Games Programming
 **SAE Institute Genève** · CDI · août 2021 — aujourd'hui
 
 - Cours **C# / Unity** orientés **Gameplay**, **UI**, **génération procédurale** et **programmation IA** (NPCs autonomes, behaviour trees)
