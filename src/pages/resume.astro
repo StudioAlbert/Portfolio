@@ -3,6 +3,7 @@ import { getEntry, render } from "astro:content";
 import PageLayout from "@/layouts/Base.astro";
 import { siteConfig } from "@/site-config";
 import { contactIcons } from "@/data/icons";
+import { withBase } from "@/utils/path";
 
 const entry = await getEntry("page", "resume");
 if (!entry) throw new Error("Missing src/content/page/resume.md");
@@ -20,7 +21,7 @@ const meta = {
 <PageLayout meta={meta}>
 	<div class="resume-layout">
 		<aside class="sidebar" aria-label="Coordonnées">
-			<div class="profile-photo"><img src="/photo.jpg" alt={authorName} /></div>
+			<div class="profile-photo"><img src={withBase("/photo.jpg")} alt={authorName} /></div>
 			<h1>{authorName}</h1>
 			{profile?.jobTitle && <p class="job-title">{profile.jobTitle}</p>}
 			<p class="location">Lyon, France</p>
@@ -53,7 +54,7 @@ const meta = {
 				<li><a href="/projects/" class="contact-plain">Projets</a></li>
 			</ul>
 
-			<a class="print-cv" href="/CV_Sebastien_Albert.pdf" download>Télécharger en PDF</a>
+			<a class="print-cv" href={withBase("/CV_Sebastien_Albert.pdf")} download>Télécharger en PDF</a>
 		</aside>
 
 		<article class="bio">
