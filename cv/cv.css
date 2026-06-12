@@ -144,7 +144,7 @@ html, body {
 }
 
 .job {
-  margin-bottom: 2.8mm;
+  margin-bottom: 2mm;
   page-break-inside: avoid;
   position: relative;
   padding-left: 4mm;
@@ -200,7 +200,7 @@ html, body {
 }
 
 .footer-note {
-  margin-top: 3mm !important;
+  margin-top: 1mm !important;
   font-style: italic;
   color: var(--muted);
   font-size: 8.5pt;
