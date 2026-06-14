@@ -1,0 +1,337 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
+type MediaItem =
+	| { type: "image"; src: ImageMetadata; alt: string; caption?: string }
+	| { type: "video"; src: string; poster?: string; caption?: string }
+	| { type: "youtube"; id: string; caption?: string };
+
+interface Props {
+	media: MediaItem[];
+	title: string;
+}
+
+const { media, title } = Astro.props;
+const multiple = media.length > 1;
+---
+
+{
+	media.length > 0 && (
+		<section
+			class="gallery"
+			data-embla
+			aria-roledescription="carrousel"
+			aria-label={`Galerie — ${title}`}
+		>
+			<div class="embla">
+				<div class="embla__viewport" tabindex="0">
+					<div class="embla__container">
+						{media.map((item) => (
+							<div class="embla__slide" data-caption={item.caption ?? ""}>
+								{item.type === "image" && (
+									<Image
+										class="gallery__media"
+										src={item.src}
+										alt={item.alt}
+										widths={[400, 800, 1200]}
+										sizes="(max-width: 800px) 100vw, 760px"
+										loading="lazy"
+										decoding="async"
+									/>
+								)}
+								{item.type === "video" && (
+									<video
+										class="gallery__media"
+										controls
+										preload="metadata"
+										playsinline
+										poster={item.poster}
+									>
+										<source src={item.src} />
+									</video>
+								)}
+								{item.type === "youtube" && (
+									<div class="gallery__yt" data-yt-id={item.id}>
+										<button class="gallery__yt-btn" type="button" aria-label="Lire la vidéo">
+											<img
+												class="gallery__media gallery__yt-thumb"
+												src={`https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`}
+												alt=""
+												loading="lazy"
+											/>
+											<span class="gallery__yt-play" aria-hidden="true" />
+										</button>
+									</div>
+								)}
+							</div>
+						))}
+					</div>
+				</div>
+
+				{multiple && (
+					<>
+						<button class="gallery__btn gallery__btn--prev" type="button" aria-label="Média précédent">
+							<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+								<path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+							</svg>
+						</button>
+						<button class="gallery__btn gallery__btn--next" type="button" aria-label="Média suivant">
+							<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+								<path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+							</svg>
+						</button>
+					</>
+				)}
+			</div>
+
+			<div class="gallery__footer">
+				<p class="gallery__caption" hidden />
+				{multiple && (
+					<div class="gallery__dots" role="tablist" aria-label="Sélection du média">
+						{media.map((_, i) => (
+							<button
+								class="gallery__dot"
+								type="button"
+								role="tab"
+								aria-label={`Aller au média ${i + 1}`}
+							/>
+						))}
+					</div>
+				)}
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.gallery {
+		margin: 0 0 32px;
+	}
+	.embla {
+		position: relative;
+	}
+	.embla__viewport {
+		overflow: hidden;
+		border: 1px solid hsl(var(--theme-text) / 0.15);
+		border-radius: 6px;
+		background: hsl(var(--theme-text) / 0.04);
+	}
+	.embla__viewport:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+	}
+	.embla__container {
+		display: flex;
+		touch-action: pan-y pinch-zoom;
+	}
+	.embla__slide {
+		position: relative;
+		flex: 0 0 100%;
+		min-width: 0;
+		aspect-ratio: 16 / 9;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.gallery__media {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		display: block;
+		border: 0;
+	}
+
+	/* Prev / next */
+	.gallery__btn {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		display: grid;
+		place-items: center;
+		width: 38px;
+		height: 38px;
+		border-radius: 50%;
+		border: 1px solid hsl(var(--theme-text) / 0.15);
+		background: hsl(var(--theme-bg) / 0.82);
+		backdrop-filter: blur(4px);
+		color: hsl(var(--theme-text));
+		cursor: pointer;
+		transition: background-color 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
+	}
+	.gallery__btn:hover {
+		background: hsl(var(--theme-bg));
+		color: hsl(var(--theme-accent));
+	}
+	.gallery__btn:active {
+		transform: translateY(-50%) scale(0.94);
+	}
+	.gallery__btn--prev {
+		left: 12px;
+	}
+	.gallery__btn--next {
+		right: 12px;
+	}
+	.gallery__btn:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 2px;
+	}
+
+	/* YouTube facade */
+	.gallery__yt,
+	.gallery__yt-btn {
+		width: 100%;
+		height: 100%;
+	}
+	.gallery__yt-btn {
+		position: relative;
+		display: block;
+		padding: 0;
+		border: 0;
+		background: none;
+		cursor: pointer;
+	}
+	.gallery__yt-thumb {
+		object-fit: cover;
+	}
+	.gallery__yt-play {
+		position: absolute;
+		inset: 0;
+		margin: auto;
+		width: 62px;
+		height: 44px;
+		border-radius: 10px;
+		background: hsl(0 0% 0% / 0.55);
+		transition: background-color 0.18s ease;
+	}
+	.gallery__yt-play::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		margin: auto;
+		width: 0;
+		height: 0;
+		border-style: solid;
+		border-width: 9px 0 9px 15px;
+		border-color: transparent transparent transparent #fff;
+	}
+	.gallery__yt-btn:hover .gallery__yt-play {
+		background: hsl(var(--theme-accent) / 0.92);
+	}
+
+	/* Footer: caption + dots */
+	.gallery__footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		margin-top: 10px;
+		min-height: 20px;
+	}
+	.gallery__caption {
+		font-family: var(--font-sans);
+		font-size: 13px;
+		line-height: 1.5;
+		color: hsl(var(--theme-text) / 0.72);
+		margin: 0;
+	}
+	.gallery__caption[hidden] {
+		display: none;
+	}
+	.gallery__dots {
+		display: flex;
+		gap: 8px;
+		margin-left: auto;
+		flex-shrink: 0;
+	}
+	.gallery__dot {
+		width: 8px;
+		height: 8px;
+		padding: 0;
+		border-radius: 50%;
+		border: 1px solid var(--faint);
+		background: transparent;
+		cursor: pointer;
+		transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+	}
+	.gallery__dot:hover {
+		border-color: hsl(var(--theme-accent));
+	}
+	.gallery__dot.is-selected {
+		background: hsl(var(--theme-accent));
+		border-color: hsl(var(--theme-accent));
+	}
+	.gallery__dot:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 2px;
+	}
+
+	@media (max-width: 420px) {
+		.gallery__btn {
+			width: 34px;
+			height: 34px;
+		}
+	}
+</style>
+
+<script>
+	import EmblaCarousel from "embla-carousel";
+
+	function setupGallery(root: HTMLElement) {
+		const viewport = root.querySelector<HTMLElement>(".embla__viewport");
+		if (!viewport) return;
+
+		const embla = EmblaCarousel(viewport, { loop: true, align: "center" });
+		const slides = Array.from(root.querySelectorAll<HTMLElement>(".embla__slide"));
+		const dots = Array.from(root.querySelectorAll<HTMLButtonElement>(".gallery__dot"));
+		const caption = root.querySelector<HTMLElement>(".gallery__caption");
+
+		root.querySelector(".gallery__btn--prev")?.addEventListener("click", () => embla.scrollPrev());
+		root.querySelector(".gallery__btn--next")?.addEventListener("click", () => embla.scrollNext());
+		dots.forEach((dot, i) => dot.addEventListener("click", () => embla.scrollTo(i)));
+
+		const onSelect = () => {
+			const i = embla.selectedScrollSnap();
+			dots.forEach((d, idx) => d.classList.toggle("is-selected", idx === i));
+			// Pause any video when its slide is no longer active.
+			for (const v of root.querySelectorAll("video")) v.pause();
+			if (caption) {
+				const text = slides[i]?.getAttribute("data-caption") ?? "";
+				caption.textContent = text;
+				caption.hidden = text === "";
+			}
+		};
+		embla.on("select", onSelect);
+		embla.on("reInit", onSelect);
+		onSelect();
+
+		// Keyboard nav when the carousel has focus.
+		viewport.addEventListener("keydown", (e) => {
+			if (e.key === "ArrowLeft") {
+				e.preventDefault();
+				embla.scrollPrev();
+			} else if (e.key === "ArrowRight") {
+				e.preventDefault();
+				embla.scrollNext();
+			}
+		});
+
+		// YouTube click-to-load (privacy-friendly nocookie embed).
+		for (const wrap of root.querySelectorAll<HTMLElement>(".gallery__yt")) {
+			wrap.querySelector(".gallery__yt-btn")?.addEventListener("click", () => {
+				const id = wrap.dataset.ytId;
+				const iframe = document.createElement("iframe");
+				iframe.className = "gallery__media";
+				iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+				iframe.title = "Vidéo YouTube";
+				iframe.loading = "lazy";
+				iframe.allow =
+					"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+				iframe.allowFullscreen = true;
+				wrap.replaceChildren(iframe);
+			});
+		}
+	}
+
+	for (const el of document.querySelectorAll<HTMLElement>("[data-embla]")) setupGallery(el);
+</script>

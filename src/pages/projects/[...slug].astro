@@ -1,5 +1,6 @@
 ---
 import PageLayout from "@/layouts/Base.astro";
+import ProjectGallery from "@/components/project/ProjectGallery.astro";
 import { getCollection, render } from "astro:content";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 
@@ -46,6 +47,10 @@ const data = entry.data;
 					allowfullscreen
 				></iframe>
 			</div>
+		)}
+
+		{data.gallery.length > 0 && (
+			<ProjectGallery media={data.gallery} title={data.title} />
 		)}
 
 		<div class="body">

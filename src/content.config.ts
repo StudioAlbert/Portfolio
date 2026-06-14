@@ -62,6 +62,32 @@ const project = defineCollection({
 					src: image(),
 				})
 				.optional(),
+			// Diaporama photo/vidéo affiché sur la page projet (ordre = ordre d'affichage).
+			// Images : co-localisées et optimisées (chemin relatif ./_media/...).
+			// Vidéos : fichier mp4 servi depuis /public, ou embed YouTube via son id.
+			gallery: z
+				.array(
+					z.discriminatedUnion("type", [
+						z.object({
+							type: z.literal("image"),
+							src: image(),
+							alt: z.string(),
+							caption: z.string().optional(),
+						}),
+						z.object({
+							type: z.literal("video"),
+							src: z.string(),
+							poster: z.string().optional(),
+							caption: z.string().optional(),
+						}),
+						z.object({
+							type: z.literal("youtube"),
+							id: z.string(),
+							caption: z.string().optional(),
+						}),
+					]),
+				)
+				.default([]),
 			stack: z.array(z.string()).default([]),
 			tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
 			// Unity WebGL build folder served from /public, or external URL (itch.io, etc.)

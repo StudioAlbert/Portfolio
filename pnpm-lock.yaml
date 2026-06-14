@@ -59,6 +59,9 @@ importers:
       cssnano:
         specifier: ^7.1.9
         version: 7.1.9(postcss@8.5.14)
+      embla-carousel:
+        specifier: ^8.6.0
+        version: 8.6.0
       hastscript:
         specifier: ^9.0.1
         version: 9.0.1
@@ -1505,6 +1508,9 @@ packages:
 
   electron-to-chromium@1.5.353:
     resolution: {integrity: sha512-kOrWphBi8TOZyiJZqsgqIle0lw+tzmnQK83pV9dZUd01Nm2POECSyFQMAuarzZdYqQW7FH9RaYOuaRo3h+bQ3w==}
+
+  embla-carousel@8.6.0:
+    resolution: {integrity: sha512-SjWyZBHJPbqxHOzckOfo8lHisEaJWmwd23XppYFYVh10bU66/Pn5tkVkbkCMZVdbUE5eTCI2nD8OyIP4Z+uwkA==}
 
   emmet@2.4.11:
     resolution: {integrity: sha512-23QPJB3moh/U9sT4rQzGgeyyGIrcM+GH5uVYg2C6wZIxAIJq7Ng3QLT79tl8FUwDXhyq9SusfknOrofAKqvgyQ==}
@@ -4793,6 +4799,8 @@ snapshots:
   dset@3.1.4: {}
 
   electron-to-chromium@1.5.353: {}
+
+  embla-carousel@8.6.0: {}
 
   emmet@2.4.11:
     dependencies:
