@@ -193,13 +193,6 @@ const multiple = media.length > 1;
 		background: none;
 		cursor: pointer;
 	}
-	.gallery__yt iframe {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		border: 0;
-	}
 	.gallery__yt.is-playing .gallery__yt-btn {
 		display: none;
 	}
@@ -305,6 +298,9 @@ const multiple = media.length > 1;
 		function loadYt(wrap: HTMLElement) {
 			if (wrap.querySelector("iframe")) return;
 			const iframe = document.createElement("iframe");
+			// A JS-created iframe carries no Astro scope attribute, so scoped CSS can't
+			// target it — size it inline so it always fills the slide.
+			iframe.style.cssText = "position:absolute;inset:0;width:100%;height:100%;border:0;";
 			iframe.src = `https://www.youtube-nocookie.com/embed/${wrap.dataset.ytId}?autoplay=1&rel=0`;
 			iframe.title = "Vidéo YouTube";
 			iframe.allow =
