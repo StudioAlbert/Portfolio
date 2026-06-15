@@ -4,8 +4,9 @@ description: Application de réalité augmentée pour QIMEL — les images impri
 publishDate: 2024-01-01
 stack: ["Unity", "AR Foundation", "C#"]
 tags: ["ar", "unity", "exposition"]
+gallery:
+  - { type: youtube, id: leaskJ5qmnM, caption: "Application de réalité augmentée — démonstration" }
 featured: true
-draft: true
 ---
 
 QIMEL est une association qui mêle image, culture et population — photographies, quartiers, villes, créations. Au fil d'ateliers, photographies et écritures ont été recueillies. Le Studio a fait se rencontrer ces deux travaux dans une application de réalité augmentée : la tablette donne aux images imprimées leurs mots complémentaires et propose au visiteur un nouveau sens.
