@@ -2,6 +2,7 @@
 import PageLayout from "@/layouts/Base.astro";
 import { getCollection } from "astro:content";
 import { Schema } from "astro-seo-schema";
+import { withBase } from "@/utils/path";
 
 const siteUrl = (path: string) => new URL(path, Astro.site).toString();
 
@@ -29,7 +30,7 @@ const projects = (await getCollection("project", ({ data }) => import.meta.env.P
 		<ul class="work-list">
 			{projects.map((p) => (
 				<li>
-					<a href={`/projects/${p.id}/`}>
+					<a href={withBase(`/projects/${p.id}/`)}>
 						<div class="head">
 							<span class="name">{p.data.title}</span>
 							{p.data.stack.length > 0 && (
