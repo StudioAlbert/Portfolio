@@ -29,9 +29,3 @@ Installation vidéo expérimentant les nouveaux terrains de jeu du vjaying : int
 - Arduino + LEDs pour les sources lumineuses synchronisées
 - Pipeline vidéo / VJ
 - Combinaison impression et techniques projectives
-
-## À ajouter
-
-- Photos de l'installation in situ
-- Vidéo de la performance
-- Crédits collaborateurs / contexte de présentation

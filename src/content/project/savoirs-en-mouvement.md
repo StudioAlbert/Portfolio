@@ -16,9 +16,3 @@ QIMEL est une association qui mêle image, culture et population — photographi
 - Unity + AR Foundation
 - Reconnaissance d'images, overlays texte/image
 - Disponible dans une exposition à venir
-
-## À ajouter
-
-- Captures d'écran (placer dans `public/projects/savoirs-en-mouvement/`)
-- Vidéo de démonstration si dispo
-- Crédits collaborateurs
