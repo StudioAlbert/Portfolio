@@ -177,19 +177,31 @@ const multiple = media.length > 1;
 		outline-offset: 2px;
 	}
 
-	/* YouTube facade */
-	.gallery__yt,
-	.gallery__yt-btn {
-		width: 100%;
-		height: 100%;
+	/* YouTube facade + embed — absolute fill so the iframe always covers the slide */
+	.gallery__yt {
+		position: absolute;
+		inset: 0;
 	}
 	.gallery__yt-btn {
-		position: relative;
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
 		display: block;
 		padding: 0;
 		border: 0;
 		background: none;
 		cursor: pointer;
+	}
+	.gallery__yt iframe {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+	.gallery__yt.is-playing .gallery__yt-btn {
+		display: none;
 	}
 	.gallery__yt-thumb {
 		object-fit: cover;
@@ -290,11 +302,33 @@ const multiple = media.length > 1;
 		root.querySelector(".gallery__btn--next")?.addEventListener("click", () => embla.scrollNext());
 		dots.forEach((dot, i) => dot.addEventListener("click", () => embla.scrollTo(i)));
 
+		function loadYt(wrap: HTMLElement) {
+			if (wrap.querySelector("iframe")) return;
+			const iframe = document.createElement("iframe");
+			iframe.src = `https://www.youtube-nocookie.com/embed/${wrap.dataset.ytId}?autoplay=1&rel=0`;
+			iframe.title = "Vidéo YouTube";
+			iframe.allow =
+				"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+			iframe.allowFullscreen = true;
+			wrap.appendChild(iframe);
+			wrap.classList.add("is-playing");
+		}
+		function unloadYt(wrap: HTMLElement) {
+			wrap.querySelector("iframe")?.remove();
+			wrap.classList.remove("is-playing");
+		}
+
 		const onSelect = () => {
 			const i = embla.selectedScrollSnap();
 			dots.forEach((d, idx) => d.classList.toggle("is-selected", idx === i));
-			// Pause any video when its slide is no longer active.
+			// Stop media on slides that are no longer active.
 			for (const v of root.querySelectorAll("video")) v.pause();
+			slides.forEach((slide, idx) => {
+				if (idx !== i) {
+					const yt = slide.querySelector<HTMLElement>(".gallery__yt");
+					if (yt) unloadYt(yt);
+				}
+			});
 			if (caption) {
 				const text = slides[i]?.getAttribute("data-caption") ?? "";
 				caption.textContent = text;
@@ -318,18 +352,7 @@ const multiple = media.length > 1;
 
 		// YouTube click-to-load (privacy-friendly nocookie embed).
 		for (const wrap of root.querySelectorAll<HTMLElement>(".gallery__yt")) {
-			wrap.querySelector(".gallery__yt-btn")?.addEventListener("click", () => {
-				const id = wrap.dataset.ytId;
-				const iframe = document.createElement("iframe");
-				iframe.className = "gallery__media";
-				iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
-				iframe.title = "Vidéo YouTube";
-				iframe.loading = "lazy";
-				iframe.allow =
-					"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
-				iframe.allowFullscreen = true;
-				wrap.replaceChildren(iframe);
-			});
+			wrap.querySelector(".gallery__yt-btn")?.addEventListener("click", () => loadYt(wrap));
 		}
 	}
 
