@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 		},
 	},
 	description:
-		"Je conçois le gameplay et l'IA des jeux, et je forme les programmeurs de demain.",
+		"Je conçois le gameplay, l'IA et les systèmes interactifs temps réel des jeux, et je forme les programmeurs de demain.",
 	lang: "fr-FR",
 	ogLocale: "fr_FR",
 	sortPostsByUpdatedDate: false,
@@ -20,10 +20,10 @@ export const siteConfig: SiteConfig = {
 	hideThemeCredit: false,
 	profile: {
 		name: "Sebastien Albert",
-		email: "s.albert@sae.edu",
+		email: "sebastien.albert.perso@gmail.com",
 		github: "https://github.com/StudioAlbert",
 		linkedin: "https://www.linkedin.com/in/sebastien-albert",
-		jobTitle: "Programmeur Gameplay & IA",
+		jobTitle: "Programmeur Gameplay & IA · Systèmes temps réel",
 		employer: "SAE Institute",
 		employerUrl: "https://www.sae.edu",
 		alumni: "",

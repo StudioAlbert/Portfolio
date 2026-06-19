@@ -7,12 +7,13 @@ Programmeur Gameplay & IA et Unity Certified Expert, enseignant & coordinateur a
 
 **Expertise** : gameplay, **IA de jeu** (NPCs autonomes, behaviour trees) et **génération procédurale**.
 
-Background mixte développement logiciel, 3D / VFX et installations interactives.
+Background mixte : développement logiciel (informatique industrielle, vision par ordinateur — OpenCV), 3D / VFX et systèmes interactifs temps réel.
 
 ## Compétences
 
 - **Game programming** — C#, C++
-	- Gameplay, NPC Programming, Generation procédurale, VR / AR / XR
+	- Gameplay, NPC Programming, Génération procédurale, VR / AR / XR, systèmes temps réel
+- **Vision par ordinateur** — OpenCV (traitement d'image, mesure)
 - **Autres langages & frameworks** — WinDev, JavaScript / P5.js, Processing
 - **Post-processing** — Suite Adobe vidéo, Da Vinci
 - **Modélisation 3D** — Maya, Softimage XSI
@@ -36,8 +37,8 @@ Background mixte développement logiciel, 3D / VFX et installations interactives
 **Studio Albert** · Freelance · nov. 2015 — aujourd'hui · Lyon
 
 - Applications **VR / AR / XR** sous Unity
-- Installations interactives
-- Projets : **Savoirs en mouvement** (application AR — QIMEL), **outil de formation SNCF** (simulateur 3D du système de freinage), **Spreads** (installation vidéo / VJ, Arduino + LEDs)
+- Systèmes interactifs temps réel
+- Projets : **Savoirs en mouvement** (application AR — QIMEL), **outil de formation SNCF** (simulateur 3D temps réel du système de freinage), **Spreads** (installation vidéo / VJ, Arduino + LEDs)
 - Voir la sélection détaillée dans la section [Projets](/projects/)
 
 ### Enseignant Games Programming — C# / Unity
@@ -79,7 +80,7 @@ Background mixte développement logiciel, 3D / VFX et installations interactives
 ### Développeur
 **PRESI** · nov. 2008 — oct. 2010 · Grenoble
 
-- Développement de la gamme logicielle Presi : outils de mesure micrométrique et d'analyse métallurgique
+- Développement de la gamme logicielle Presi : mesure micrométrique et analyse métallurgique par traitement d'image et vision par ordinateur (C++, OpenCV)
 - Gestion de l'ensemble des projets du département informatique
 
 ### Graphiste 3D — Freelance
@@ -96,7 +97,7 @@ Background mixte développement logiciel, 3D / VFX et installations interactives
 ### Développeur Informatique Industrielle
 **Gebo Industries (France)** · CDI · oct. 1998 — oct. 2000 · Strasbourg
 
-- Design et programmation de postes de supervision, outils de gestion et de contrôle de production
+- Design et programmation de postes de supervision et de contrôle de production temps réel, outils de gestion
 - Clients : Kraft Jacobs Suchard, Heineken, Satuco (Tunisie)
 
 ## Formation

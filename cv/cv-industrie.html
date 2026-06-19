@@ -9,6 +9,10 @@
   .job.edu p { margin: 1.6mm 0; font-size: 9pt; color: #3a3a3a; }
   .job.edu p:first-of-type { margin-top: 0.8mm; }
   .job.edu p strong { color: var(--text); font-weight: 700; }
+  /* Variante industrie — blocs à 2 paragraphes (Fondateur, SAE) : interlignes réguliers */
+  .job.lead p { margin: 0 0 1.3mm; font-size: 8.8pt; color: #3a3a3a; }
+  .job.lead p.employer { margin: 0.3mm 0 0.6mm; font-size: 9.5pt; font-weight: 500; color: var(--accent); }
+  .job.lead p:last-child { margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -45,13 +49,13 @@
 
       <h3>Moteurs &amp; outils</h3>
       <ul class="tags">
-        <li>Unity</li><li>SFML</li><li>Git</li>
+        <li>Unity</li><li>SFML</li><li>OpenCV</li><li>Git</li>
       </ul>
 
       <h3>Domaines</h3>
       <ul class="tags">
         <li>Gameplay</li><li>Programmation IA</li><li>Génération procédurale</li>
-        <li>Temps réel</li><li>AR / VR</li><li>Conception BDD</li>
+        <li>Temps réel</li><li>Vision par ordinateur</li><li>AR / VR</li><li>Conception BDD</li>
         <li>Informatique industrielle</li><li>3D / VFX</li>
       </ul>
     </section>
@@ -76,35 +80,38 @@
       <h1>Sébastien Albert</h1>
       <p class="subtitle">Ingénieur / Développeur logiciel · C# · C++ · .NET · Temps réel, outils &amp; 3D interactive</p>
       <p class="summary">Développeur logiciel depuis 1998 — applications de gestion, informatique industrielle,
-      puis temps réel et 3D interactive sous Unity (C# / C++). Unity Certified Expert — Programmer.
+      puis temps réel et 3D interactive sous Unity (C# / C++), dont un simulateur 3D temps réel de formation
+      pour la SNCF. Unity Certified Expert — Programmer.
       Goût pour les systèmes robustes, l'outillage et l'architecture logicielle propre.</p>
     </header>
 
     <section>
       <h2>Expérience</h2>
 
-      <div class="job">
+      <div class="job lead">
         <div class="job-head">
           <h3>Fondateur — développement Unity, jeux &amp; outils</h3>
           <span class="dates">nov. 2015 → auj. · Lyon</span>
         </div>
         <p class="employer">Studio Albert · Freelance</p>
         <p>Conception et développement d'applications temps réel et de 3D interactive sous Unity
-        (C# / C++) : architecture, outils internes, intégration matérielle, prototypage.
-        Applications AR / VR / XR et installations interactives. Projets notables :
-        Savoirs en mouvement (AR — QIMEL), outil de formation SNCF (simulateur 3D du système de
+        (C# / C++) : architecture logicielle, outils internes, intégration matérielle et
+        prototypage, du cadrage à la livraison.</p>
+        <p>Applications AR / VR / XR et systèmes interactifs temps réel. Projets notables :
+        Savoirs en mouvement (AR — QIMEL), simulateur 3D temps réel de formation SNCF (système de
         freinage), Spreads (installation vidéo / VJ, Arduino + LEDs).</p>
       </div>
 
-      <div class="job">
+      <div class="job lead">
         <div class="job-head">
           <h3>Enseignant &amp; Coordinateur académique — Games Programming</h3>
           <span class="dates">2021 → auj.</span>
         </div>
         <p class="employer">SAE Institute Genève</p>
-        <p>Conception et enseignement des cursus avancés C# / Unity (gameplay, UI, génération
-        procédurale, programmation IA) et C++ (programmation générale, SFML). Veille technologique
-        continue sur les pratiques de l'industrie, rédaction des examens et encadrement des projets.</p>
+        <p>Conception et enseignement des cursus avancés C# / Unity — gameplay, UI, génération
+        procédurale et programmation IA — et C++ (programmation générale, SFML).</p>
+        <p>Coordination pédagogique de la section, rédaction des examens, encadrement des projets
+        étudiants et veille continue sur les pratiques de l'industrie.</p>
       </div>
 
       <div class="job edu">
@@ -127,9 +134,10 @@
         <p><strong>LogSystem</strong> (2010–15, Lyon) — application de gestion à forte dominante
         internationale · WinDev, C# .NET, conception de bases de données.</p>
         <p><strong>PRESI</strong> (2008–10, Grenoble) — gamme logicielle de mesure micrométrique
-        &amp; analyse métallurgique · pilotage des projets du département informatique.</p>
+        &amp; analyse métallurgique par traitement d'image et vision par ordinateur (C++, OpenCV) ·
+        pilotage des projets du département informatique.</p>
         <p><strong>Gebo Industries</strong> (1998–2000, Strasbourg) — informatique industrielle :
-        postes de supervision et outils de contrôle de production (Kraft Jacobs Suchard, Heineken, Satuco).</p>
+        supervision et contrôle de production temps réel (Kraft Jacobs Suchard, Heineken, Satuco).</p>
       </div>
 
       <div class="job">
