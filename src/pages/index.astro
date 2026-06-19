@@ -205,9 +205,22 @@ const contactLinks: ContactLink[] = [
 </PageLayout>
 
 <style>
+	/* ---------- Chapter headers (Expérience / Projets / Writing) ---------- */
+	/* Big serif headings echoing the hero name (a touch smaller), tight spacing. */
+	.section-label {
+		font-family: var(--font-serif);
+		font-size: 34px;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.1;
+		text-transform: none;
+		color: hsl(var(--theme-text));
+		margin-bottom: 14px;
+	}
+
 	/* ---------- Hero ---------- */
 	.hero {
-		margin-bottom: 88px;
+		margin-bottom: 56px;
 	}
 	.hero-name {
 		font-family: var(--font-serif);
@@ -295,7 +308,7 @@ const contactLinks: ContactLink[] = [
 
 	/* ---------- Teaching highlight ---------- */
 	.teaching {
-		margin-bottom: 88px;
+		margin-bottom: 56px;
 	}
 	.teaching p {
 		font-size: 17px;
@@ -404,7 +417,7 @@ const contactLinks: ContactLink[] = [
 	}
 
 	.work {
-		margin-bottom: 88px;
+		margin-bottom: 56px;
 	}
 
 	.archive-link a:focus-visible {
@@ -414,8 +427,11 @@ const contactLinks: ContactLink[] = [
 	}
 
 	@media (max-width: 720px) {
+		.section-label {
+			font-size: 29px;
+		}
 		.hero {
-			margin-bottom: 64px;
+			margin-bottom: 44px;
 		}
 		.hero-name {
 			font-size: 32px;
@@ -451,8 +467,11 @@ const contactLinks: ContactLink[] = [
 	}
 
 	@media (max-width: 420px) {
+		.section-label {
+			font-size: 24px;
+		}
 		.hero {
-			margin-bottom: 48px;
+			margin-bottom: 40px;
 		}
 		.hero-name {
 			font-size: 26px;
@@ -465,7 +484,7 @@ const contactLinks: ContactLink[] = [
 			gap: 8px 16px;
 		}
 		.teaching {
-			margin-bottom: 56px;
+			margin-bottom: 40px;
 		}
 		.teaching p {
 			font-size: 15.5px;
@@ -480,7 +499,7 @@ const contactLinks: ContactLink[] = [
 			font-size: 15px;
 		}
 		.work {
-			margin-bottom: 56px;
+			margin-bottom: 40px;
 		}
 	}
 </style>

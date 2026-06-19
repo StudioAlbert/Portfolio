@@ -94,6 +94,9 @@ const project = defineCollection({
 			demoUrl: z.string().optional(),
 			// Hauteur fixe de l'iframe démo en px (sinon ratio 16:9). Utile pour les widgets verticaux.
 			demoHeight: z.number().optional(),
+			// Lien de secours affiché sous la démo si l'embed est bloqué (ex. page itch.io derrière Cloudflare).
+			// Par défaut on retombe sur demoUrl.
+			demoFallbackUrl: z.string().optional(),
 			repoUrl: z.string().url().optional(),
 			featured: z.boolean().default(false),
 			draft: z.boolean().default(false),

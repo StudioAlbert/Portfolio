@@ -16,6 +16,11 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const data = entry.data;
+
+// Lien de secours sous la démo (l'embed peut être bloqué, ex. itch.io derrière Cloudflare).
+const demoFallbackHref = data.demoFallbackUrl ?? data.demoUrl;
+const isItch = demoFallbackHref?.includes("itch.io");
+const demoFallbackLabel = isItch ? "Jouer sur itch.io →" : "Ouvrir dans un nouvel onglet →";
 ---
 
 <PageLayout meta={{ title: data.title, description: data.description }}>
@@ -49,6 +54,13 @@ const data = entry.data;
 			</div>
 		)}
 
+		{data.demoUrl && demoFallbackHref && (
+			<p class="demo-fallback">
+				L'aperçu ne se charge pas ?{" "}
+				<a href={demoFallbackHref} rel="noreferrer" target="_blank">{demoFallbackLabel}</a>
+			</p>
+		)}
+
 		{data.gallery.length > 0 && (
 			<ProjectGallery media={data.gallery} title={data.title} />
 		)}
@@ -64,7 +76,7 @@ const data = entry.data;
 	/* Texte lisible (largeur de lecture) ; seule la démo occupe toute la largeur */
 	.project > header,
 	.project > .body { max-width: var(--reading-width); }
-	.project h1 { font-family: var(--font-serif); margin: 0 0 8px; }
+	.project h1 { font-family: var(--font-serif); font-size: 34px; font-weight: 600; line-height: 1.12; letter-spacing: -0.02em; margin: 0 0 10px; }
 	.desc { font-family: var(--font-serif); font-size: 17.5px; line-height: 1.7; margin: 0 0 12px; }
 	.stack { font-size: 14px; opacity: 0.75; margin: 0 0 8px; }
 	.links { display: flex; gap: 16px; margin: 0 0 28px; }
@@ -81,6 +93,42 @@ const data = entry.data;
 	/* Démo à hauteur fixe (widgets verticaux) : on annule le ratio 16:9 */
 	.demo--fixed { aspect-ratio: auto; }
 	.demo iframe { width: 100%; height: 100%; border: 0; display: block; }
+		.demo-fallback { font-size: 18px; opacity: 0.95; margin: -10px 0 36px; }
+		.demo-fallback a { font-weight: 600; text-decoration: underline; }
 	.body :global(p) { margin: 0 0 22px; }
 	.body :global(img) { max-width: 100%; height: auto; border-radius: 4px; }
+	/* Sous-titres de section (## …) — plus grands que le corps de texte */
+	.body :global(h2) {
+		font-family: var(--font-serif);
+		font-size: 24px;
+		font-weight: 600;
+		line-height: 1.3;
+		letter-spacing: -0.01em;
+		margin: 40px 0 14px;
+	}
+	.body :global(h3) {
+		font-family: var(--font-serif);
+		font-size: 20px;
+		font-weight: 600;
+		line-height: 1.35;
+		margin: 32px 0 10px;
+	}
+	/* Bloc d'intro (> …) — chapeau mis en valeur */
+	.body :global(blockquote) {
+		margin: 0 0 28px;
+		padding: 2px 0 2px 18px;
+		border-left: 3px solid hsl(var(--theme-accent) / 0.55);
+		font-size: 19px;
+		line-height: 1.6;
+		color: hsl(var(--theme-text-muted));
+	}
+	.body :global(blockquote p) { margin: 0; }
+	.body :global(blockquote strong) { color: hsl(var(--theme-text)); }
+
+	@media (max-width: 420px) {
+		.project h1 { font-size: 27px; }
+		.body :global(h2) { font-size: 21px; margin: 32px 0 12px; }
+		.body :global(h3) { font-size: 18px; }
+		.body :global(blockquote) { font-size: 17px; }
+	}
 </style>
