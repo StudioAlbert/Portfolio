@@ -22,7 +22,7 @@ export const siteConfig: SiteConfig = {
 		name: "Sebastien Albert",
 		email: "s.albert@sae.edu",
 		github: "https://github.com/StudioAlbert",
-		linkedin: "https://www.linkedin.com/in/sebastien-alber-5775804/",
+		linkedin: "https://www.linkedin.com/in/sebastien-albert",
 		jobTitle: "Programmeur Gameplay & IA",
 		employer: "SAE Institute",
 		employerUrl: "https://www.sae.edu",
