@@ -7,7 +7,16 @@
       "Read(//tmp/**)",
       "Bash(git push *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(pnpm dev *)",
+      "Bash(curl -s http://localhost:4321/)",
+      "Bash(curl -s http://localhost:4321/resume/)",
+      "Bash(git --no-pager diff src/site.config.ts)",
+      "WebFetch(domain:claude.ai)",
+      "Bash(git --no-pager diff -- src/content/page/resume.md src/content/project/savoirs-en-mouvement.md)",
+      "Bash(git --no-pager diff --stat -- src/content/page/resume.md)",
+      "Bash(git --no-pager diff --no-color -- src/content/page/resume.md)",
+      "Bash(curl -sL -A \"Mozilla/5.0\" \"https://claude.ai/share/1f314271-1ffb-40f6-b453-b6d2e822d56a\" -o /tmp/share.html -w \"HTTP %{http_code}\\\\n\")"
     ]
   }
 }
