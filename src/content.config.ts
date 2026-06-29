@@ -48,6 +48,9 @@ const project = defineCollection({
 		z.object({
 			title: z.string().max(120),
 			description: z.string().min(10).max(200),
+			// Carte social (Open Graph). Chemin vers une image dans /public
+			// (ex. "/og/mon-projet.png" ou un screenshot du jeu). Sinon : fallback social-card.png.
+			ogImage: z.string().optional(),
 			publishDate: z
 				.string()
 				.or(z.date())

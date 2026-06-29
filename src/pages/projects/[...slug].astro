@@ -23,7 +23,7 @@ const isItch = demoFallbackHref?.includes("itch.io");
 const demoFallbackLabel = isItch ? "Jouer sur itch.io →" : "Ouvrir dans un nouvel onglet →";
 ---
 
-<PageLayout meta={{ title: data.title, description: data.description }}>
+<PageLayout meta={{ title: data.title, description: data.description, ogImage: data.ogImage }}>
 	<article class="project">
 		<header>
 			<h1>{data.title}</h1>

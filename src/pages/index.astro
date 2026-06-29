@@ -79,7 +79,7 @@ const contactLinks: ContactLink[] = [
 	}}
 />
 
-<PageLayout meta={{ title: "Home", description: siteConfig.description }}>
+<PageLayout meta={{ title: "Home", description: siteConfig.description, ogImage: "/og/accueil.png" }}>
 	<section class="hero">
 		<h1 class="hero-name">{profile?.name ?? siteConfig.author}</h1>
 		{profile?.jobTitle && <p class="hero-role">{profile.jobTitle}</p>}

@@ -2,13 +2,24 @@
 title: Aiguillages — Train Dispatch
 description: "Démonstrateur pédagogique Unity (SAE Genève) : jeu de gestion ferroviaire — cliquez les drapeaux bleus pour guider le train et enchaîner les passages en station avant la fin du chrono."
 publishDate: 2026-06-19
-stack: ["Unity", "C#", "WebGL", "Splines"]
-tags: ["unity", "webgl", "simulation", "pédagogie", "ferroviaire", "prototype"]
-demoUrl: "https://itch.io/embed-upload/17956835?color=333333"
+stack:
+  - Unity
+  - C#
+  - WebGL
+  - Splines
+tags:
+  - unity
+  - webgl
+  - simulation
+  - pédagogie
+  - ferroviaire
+  - prototype
+demoUrl: https://itch.io/embed-upload/17956835?color=333333
 demoHeight: 600
-demoFallbackUrl: "https://the-real-studio-albert.itch.io/aiguillages"
-featured: false
+demoFallbackUrl: https://the-real-studio-albert.itch.io/aiguillages
+featured: true
 draft: false
+ogImage: "/og/BannerAiguillages-Epic.png"
 ---
 
 > **Énoncé d'examen — démonstrateur pédagogique (prototype).** Support d'examen du module Unity **4FSC0PF002** à la **SAE Institute Genève** : une base de travail que les étudiants complètent (gestion des signaux, chronomètre, score, HUD). L'objectif est l'apprentissage et l'évaluation, pas la rejouabilité.
