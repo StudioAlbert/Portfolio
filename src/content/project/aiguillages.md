@@ -14,9 +14,8 @@ tags:
   - pédagogie
   - ferroviaire
   - prototype
-demoUrl: https://itch.io/embed-upload/17956835?color=333333
-demoHeight: 600
-demoFallbackUrl: https://the-real-studio-albert.itch.io/aiguillages
+demoUrl: "https://itch.io/embed/4683248?bg_color=333333&fg_color=eeeeee&link_color=fa5c5c&border_color=444444"
+demoHeight: 167
 featured: true
 draft: false
 ogImage: "/og/BannerAiguillages-Epic.png"

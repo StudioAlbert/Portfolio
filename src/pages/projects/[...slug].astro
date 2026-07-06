@@ -17,8 +17,8 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const data = entry.data;
 
-// Lien de secours sous la démo (l'embed peut être bloqué, ex. itch.io derrière Cloudflare).
-const demoFallbackHref = data.demoFallbackUrl ?? data.demoUrl;
+// Lien de secours sous la démo — opt-in : ne s'affiche que si `demoFallbackUrl` est explicitement défini.
+const demoFallbackHref = data.demoFallbackUrl;
 const isItch = demoFallbackHref?.includes("itch.io");
 const demoFallbackLabel = isItch ? "Jouer sur itch.io →" : "Ouvrir dans un nouvel onglet →";
 ---
