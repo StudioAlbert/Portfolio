@@ -1,15 +1,26 @@
 ---
+import { flagIcons } from "@/data/icons";
+import { type Lang, languages, locales } from "@/i18n/ui";
+import { localizePath, useTranslations } from "@/i18n/utils";
 import { menuLinks, siteConfig } from "@/site-config";
-import { withBase } from "@/utils/path";
 import ThemeToggle from "../ThemeToggle.astro";
 
+interface Props {
+	lang: Lang;
+	/** Chemin (sans base ni langue) visé par le sélecteur de langue. */
+	alternatePath: string;
+}
+
+const { alternatePath, lang } = Astro.props;
+const t = useTranslations(lang);
 const url = new URL(Astro.request.url);
 const wordmark = siteConfig.title;
 
 const visibleMenuLinks = menuLinks;
+const allLangs = Object.keys(languages) as Lang[];
 
 const isActive = (path: string) => {
-	const target = withBase(path);
+	const target = localizePath(path, lang);
 	if (path === "/") return url.pathname === target;
 	return url.pathname === target || url.pathname.startsWith(target);
 };
@@ -26,7 +37,7 @@ const navIcons: Record<string, string> = {
 ---
 
 <header class="site-header" id="main-header">
-	<a href={withBase("/")} class="wordmark">{wordmark}</a>
+	<a href={localizePath("/", lang)} class="wordmark">{wordmark}</a>
 	<div class="header-right">
 		<nav class="nav" aria-label="Primary">
 			{
@@ -35,7 +46,7 @@ const navIcons: Record<string, string> = {
 						aria-current={isActive(link.path) ? "page" : false}
 						class:list={[{ active: isActive(link.path) }]}
 						data-astro-prefetch
-						href={withBase(link.path)}
+						href={localizePath(link.path, lang)}
 					>
 						<svg
 							aria-hidden="true"
@@ -47,12 +58,41 @@ const navIcons: Record<string, string> = {
 							stroke-linejoin="round"
 							set:html={navIcons[link.path] ?? ""}
 						/>
-						<span>{link.title}</span>
+						<span>{t(link.key)}</span>
 					</a>
 				))
 			}
 		</nav>
-		<ThemeToggle />
+		<div class="header-tools">
+			<nav class="lang-switch" aria-label={t("lang.label")}>
+				{
+					allLangs.map((l, i) => (
+						<Fragment>
+							{i > 0 && <span class="sep" aria-hidden="true">·</span>}
+							{l === lang ? (
+								<span class="current" aria-current="true" lang={locales[l].htmlLang}>
+									<span class="flag" set:html={flagIcons[l]} />
+									{l.toUpperCase()}
+								</span>
+							) : (
+								<a
+									aria-label={languages[l]}
+									data-astro-prefetch
+									data-lang-choice={l}
+									href={localizePath(alternatePath, l)}
+									hreflang={locales[l].hreflang}
+									lang={locales[l].htmlLang}
+								>
+									<span class="flag" set:html={flagIcons[l]} />
+									{l.toUpperCase()}
+								</a>
+							)}
+						</Fragment>
+					))
+				}
+			</nav>
+			<ThemeToggle />
+		</div>
 	</div>
 </header>
 
@@ -79,6 +119,13 @@ const navIcons: Record<string, string> = {
 		display: flex;
 		align-items: baseline;
 		gap: 22px;
+	}
+	/* Sélecteur de langue + bascule de thème : groupés pour tenir dans une seule
+	   cellule de la grille mobile. */
+	.header-tools {
+		display: flex;
+		align-items: baseline;
+		gap: 16px;
 	}
 	.nav {
 		display: flex;
@@ -122,6 +169,56 @@ const navIcons: Record<string, string> = {
 		background: hsl(var(--theme-accent));
 	}
 
+	.lang-switch {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-family: var(--font-sans);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		line-height: 1.4;
+	}
+	.lang-switch a,
+	.lang-switch .current {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+	}
+	.lang-switch .current {
+		color: hsl(var(--theme-accent));
+	}
+	/* Drapeaux en SVG inline : les emoji drapeaux ne s'affichent pas sous Windows. */
+	.lang-switch .flag {
+		display: inline-flex;
+		flex: 0 0 auto;
+	}
+	.lang-switch .flag :global(svg) {
+		width: 16px;
+		height: 12px;
+		border-radius: 1px;
+		box-shadow: 0 0 0 1px hsl(var(--theme-text) / 0.18);
+	}
+	.lang-switch .sep {
+		color: var(--faint);
+	}
+	.lang-switch a {
+		color: hsl(var(--theme-text-muted));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
+	.lang-switch a:hover {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+	.lang-switch a:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 2px;
+	}
+
 	@media (max-width: 720px) {
 		.site-header {
 			margin-bottom: 36px;
@@ -136,7 +233,11 @@ const navIcons: Record<string, string> = {
 		}
 		.wordmark { grid-area: wordmark; }
 		.header-right { display: contents; }
-		.theme-toggle { grid-area: theme; justify-self: end; }
+		.header-tools {
+			grid-area: theme;
+			justify-self: end;
+			gap: 14px;
+		}
 		.nav {
 			grid-area: nav;
 			gap: 22px;
@@ -169,5 +270,27 @@ const navIcons: Record<string, string> = {
 		.nav a svg {
 			display: none;
 		}
+		.header-tools {
+			gap: 10px;
+		}
+		.lang-switch {
+			font-size: 11.5px;
+			gap: 5px;
+		}
+		.lang-switch .flag :global(svg) {
+			width: 14px;
+			height: 10.5px;
+		}
 	}
 </style>
+
+<script>
+	// Mémorise le choix explicite de langue : la redirection sur l'accueil le respecte.
+	for (const el of document.querySelectorAll<HTMLElement>("[data-lang-choice]")) {
+		el.addEventListener("click", () => {
+			try {
+				localStorage.setItem("lang", el.dataset.langChoice ?? "");
+			} catch {}
+		});
+	}
+</script>

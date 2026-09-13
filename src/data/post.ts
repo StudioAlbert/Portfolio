@@ -1,9 +1,12 @@
 import { type CollectionEntry, getCollection } from "astro:content";
+import type { Lang } from "@/i18n/ui";
+import { getEntryLang } from "@/i18n/utils";
 import { siteConfig } from "@/site-config";
 
-/** Fetch all posts. Drafts are excluded in production builds. */
-export async function getAllPosts(): Promise<CollectionEntry<"post">[]> {
-	return await getCollection("post", ({ data }) => {
+/** Fetch all posts — only those in `lang` when given. Drafts are excluded in production builds. */
+export async function getAllPosts(lang?: Lang): Promise<CollectionEntry<"post">[]> {
+	return await getCollection("post", ({ data, id }) => {
+		if (lang && getEntryLang(id) !== lang) return false;
 		return import.meta.env.PROD ? !data.draft : true;
 	});
 }

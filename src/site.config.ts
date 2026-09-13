@@ -1,5 +1,6 @@
 import type { SiteConfig } from "@/types";
 import type { AstroExpressiveCodeOptions } from "astro-expressive-code";
+import { type UIKey, ui } from "./i18n/ui";
 
 export const siteConfig: SiteConfig = {
 	author: "Sebastien Albert",
@@ -11,8 +12,8 @@ export const siteConfig: SiteConfig = {
 			year: "numeric",
 		},
 	},
-	description:
-		"Je conçois le gameplay, l'IA et les systèmes interactifs temps réel des jeux, et je forme les programmeurs de demain.",
+	// Valeurs FR par défaut (webmanifest) ; les pages lisent la langue courante via src/i18n.
+	description: ui.fr["site.description"],
 	lang: "fr-FR",
 	ogLocale: "fr_FR",
 	sortPostsByUpdatedDate: false,
@@ -23,7 +24,7 @@ export const siteConfig: SiteConfig = {
 		email: "sebastien.albert.perso@gmail.com",
 		github: "https://github.com/StudioAlbert",
 		linkedin: "https://www.linkedin.com/in/sebastien-albert",
-		jobTitle: "Programmeur Gameplay & IA · Systèmes temps réel",
+		jobTitle: ui.fr["profile.jobTitle"],
 		employer: "SAE Institute",
 		employerUrl: "https://www.sae.edu",
 		alumni: "",
@@ -43,22 +44,23 @@ export const siteConfig: SiteConfig = {
 	// },
 };
 
-export const menuLinks: { path: string; title: string }[] = [
+// Libellés traduits dans src/i18n/ui.ts ; `path` est sans préfixe de langue.
+export const menuLinks: { path: string; key: UIKey }[] = [
 	{
 		path: "/",
-		title: "Accueil",
+		key: "nav.home",
 	},
 	{
 		path: "/resume/",
-		title: "CV",
+		key: "nav.resume",
 	},
 	{
 		path: "/posts/",
-		title: "Blog",
+		key: "nav.blog",
 	},
 	{
 		path: "/projects/",
-		title: "Projets",
+		key: "nav.projects",
 	},
 ];
 

@@ -7,8 +7,8 @@ import { render } from "astro:content";
 
 // getStaticPaths ne tourne pas avec un adaptateur SSR : https://docs.astro.build/en/guides/routing/
 export const getStaticPaths = (async () => {
-	const blogEntries = await getAllPosts("fr");
-	const translated = new Set((await getAllPosts("en")).map((p) => getEntrySlug(p.id)));
+	const blogEntries = await getAllPosts("en");
+	const translated = new Set((await getAllPosts("fr")).map((p) => getEntrySlug(p.id)));
 	return blogEntries.map((entry) => {
 		const slug = getEntrySlug(entry.id);
 		return { params: { slug }, props: { entry, hasTranslation: translated.has(slug) } };
@@ -21,6 +21,6 @@ const { entry, hasTranslation } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<PostLayout hasTranslation={hasTranslation} lang="fr" post={entry}>
+<PostLayout hasTranslation={hasTranslation} lang="en" post={entry}>
 	<Content />
 </PostLayout>

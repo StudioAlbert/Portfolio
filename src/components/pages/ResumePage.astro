@@ -1,0 +1,453 @@
+---
+import { contactIcons } from "@/data/icons";
+import { type Lang, defaultLang } from "@/i18n/ui";
+import { localizePath, useTranslations } from "@/i18n/utils";
+import PageLayout from "@/layouts/Base.astro";
+import { siteConfig } from "@/site-config";
+import { withBase } from "@/utils/path";
+import { getEntry, render } from "astro:content";
+
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Traductions rangées dans un sous-dossier de la collection : src/content/page/en/resume.md
+const entryId = lang === defaultLang ? "resume" : `${lang}/resume`;
+const entry = await getEntry("page", entryId);
+if (!entry) throw new Error(`Missing src/content/page/${entryId}.md`);
+const { Content } = await render(entry);
+
+const profile = siteConfig.profile;
+const authorName = profile?.name ?? siteConfig.author;
+
+const meta = {
+	description: entry.data.description ?? `${authorName} — CV.`,
+	title: entry.data.title,
+	ogImage: t("og.resume"),
+};
+---
+
+<PageLayout meta={meta}>
+	<div class="resume-layout">
+		<aside class="sidebar" aria-label={t("resume.contactLabel")}>
+			<div class="profile-photo"><img src={withBase("/photo.jpg")} alt={authorName} /></div>
+			<h1>{authorName}</h1>
+			<p class="job-title">{t("profile.jobTitle")}</p>
+			<p class="location">Lyon, France</p>
+
+			<ul class="contacts">
+				{profile?.email && (
+					<li>
+						<a href={`mailto:${profile.email}`}>
+							<span class="contact-icon" set:html={contactIcons.email} />
+							<span>{profile.email}</span>
+						</a>
+					</li>
+				)}
+				{profile?.linkedin && (
+					<li>
+						<a href={profile.linkedin} rel="noreferrer" target="_blank">
+							<span class="contact-icon" set:html={contactIcons.linkedin} />
+							<span>LinkedIn</span>
+						</a>
+					</li>
+				)}
+				{profile?.github && (
+					<li>
+						<a href={profile.github} rel="noreferrer" target="_blank">
+							<span class="contact-icon" set:html={contactIcons.github} />
+							<span>GitHub</span>
+						</a>
+					</li>
+				)}
+				<li>
+					<a href={localizePath("/projects/", lang)} class="contact-plain">{t("nav.projects")}</a>
+				</li>
+			</ul>
+
+			<a class="print-cv" href={withBase(t("resume.pdf"))} download>{t("resume.download")}</a>
+		</aside>
+
+		<article
+			class="bio"
+			data-expand-label={t("resume.expandAll")}
+			data-collapse-label={t("resume.collapseAll")}
+		>
+			<Content />
+		</article>
+	</div>
+</PageLayout>
+
+<script is:inline>
+	(function () {
+		const bio = document.querySelector(".bio");
+		if (!bio) return;
+		const items = bio.querySelectorAll("details.experience");
+		if (items.length === 0) return;
+
+		// Cherche le h2 "Expérience" / "Experience" et y attache les boutons à droite
+		const norm = (s) =>
+			s
+				.normalize("NFD")
+				.replace(/[\u0300-\u036f]/g, "")
+				.trim()
+				.toLowerCase();
+		const expHeading = Array.from(bio.querySelectorAll("h2")).find((h) =>
+			norm(h.textContent).startsWith("experience"),
+		);
+		if (!expHeading) return;
+		expHeading.classList.add("exp-section-header");
+		const wrap = document.createElement("span");
+		wrap.className = "exp-controls";
+		const addButton = (action, label) => {
+			const btn = document.createElement("button");
+			btn.type = "button";
+			btn.dataset.expAction = action;
+			btn.textContent = label;
+			wrap.appendChild(btn);
+		};
+		addButton("expand", bio.dataset.expandLabel);
+		addButton("collapse", bio.dataset.collapseLabel);
+		expHeading.appendChild(wrap);
+
+		wrap.addEventListener("click", (e) => {
+			const btn = e.target.closest("button[data-exp-action]");
+			if (!btn) return;
+			const open = btn.dataset.expAction === "expand";
+			items.forEach((d) => {
+				if (open) d.setAttribute("open", "");
+				else d.removeAttribute("open");
+			});
+		});
+
+	})();
+</script>
+
+<style>
+	/* Élargir la wrap uniquement sur la page CV */
+	:global(.wrap):has(.resume-layout) {
+		max-width: 1100px;
+	}
+
+	.resume-layout {
+		display: grid;
+		grid-template-columns: 240px 1fr;
+		gap: 64px;
+		align-items: start;
+		margin-bottom: 64px;
+	}
+
+	/* ---------- Sidebar ---------- */
+	.sidebar {
+		position: sticky;
+		top: 24px;
+		align-self: start;
+		font-family: var(--font-sans);
+		font-size: 14.5px;
+		line-height: 1.6;
+		color: hsl(var(--theme-text));
+		padding: 20px 22px;
+		background: hsl(var(--theme-text) / 0.04);
+		border: 1px solid hsl(var(--theme-text) / 0.12);
+		border-radius: 6px;
+	}
+	.sidebar .profile-photo {
+		width: 120px;
+		height: 120px;
+		border-radius: 50%;
+		margin: 0 auto 16px;
+		border: 2px solid hsl(var(--theme-text) / 0.15);
+		overflow: hidden;
+	}
+	.sidebar .profile-photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center 22%;
+		transform: scale(1.6);
+		transform-origin: center 22%;
+		display: block;
+	}
+	.sidebar h1 {
+		font-family: var(--font-serif);
+		font-size: 26px;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		margin: 0 0 4px;
+	}
+	.sidebar .job-title {
+		color: hsl(var(--theme-accent));
+		margin: 0 0 2px;
+		font-size: 15px;
+	}
+	.sidebar .location {
+		opacity: 0.7;
+		margin: 0 0 20px;
+	}
+	.sidebar .contacts {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.sidebar .contacts li {
+		margin-bottom: 6px;
+		word-wrap: break-word;
+		overflow-wrap: anywhere;
+	}
+	.sidebar .contacts a {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		color: hsl(var(--theme-text));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
+	.sidebar .contacts a:hover {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+	.sidebar .contacts .contact-icon {
+		display: inline-flex;
+		flex: 0 0 auto;
+		color: hsl(var(--theme-text) / 0.75);
+	}
+	.sidebar .contacts .contact-icon :global(svg) {
+		width: 15px;
+		height: 15px;
+	}
+	.sidebar .contacts a:hover .contact-icon {
+		color: hsl(var(--theme-accent));
+	}
+	/* Lien sans icône (Projets) : aligner le texte sur les autres */
+	.sidebar .contacts .contact-plain {
+		padding-left: 22px;
+	}
+	.print-cv {
+		display: block;
+		margin-top: 20px;
+		width: 100%;
+		background: transparent;
+		border: 1px solid hsl(var(--theme-text) / 0.2);
+		color: hsl(var(--theme-text) / 0.85);
+		font-family: var(--font-sans);
+		font-size: 13px;
+		padding: 7px 12px;
+		border-radius: 4px;
+		cursor: pointer;
+		text-align: center;
+		text-decoration: none;
+		transition: color 0.2s ease, border-color 0.2s ease;
+	}
+	.print-cv:hover {
+		border-color: hsl(var(--theme-accent));
+		color: hsl(var(--theme-accent));
+	}
+	.print-cv:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 2px;
+	}
+
+	/* ---------- Body ---------- */
+	.bio {
+		font-family: var(--font-serif);
+		font-size: 17.5px;
+		line-height: 1.75;
+		color: hsl(var(--theme-text));
+	}
+	.bio :global(h2) {
+		font-family: var(--font-serif);
+		font-size: 30px;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		margin: 48px 0 16px;
+	}
+	.bio :global(h2:first-child) { margin-top: 0; }
+	.bio :global(h3) {
+		font-family: var(--font-serif);
+		font-size: 19px;
+		font-weight: 600;
+		margin: 24px 0 4px;
+	}
+	.bio :global(p) { margin: 0 0 18px; text-wrap: pretty; }
+
+	/* No bullets, no decoration — items deviennent des lignes propres */
+	.bio :global(ul) {
+		list-style: none !important;
+		padding: 0;
+		margin: 0 0 28px;
+	}
+	.bio :global(ul li) {
+		list-style: none !important;
+		margin: 0 0 8px;
+		padding: 0;
+		text-wrap: pretty;
+		border: 0;
+	}
+	.bio :global(ul li::marker) { content: none; }
+	.bio :global(ul li:last-child) { margin-bottom: 0; }
+
+	/* ---------- Expériences pliables ---------- */
+	/* h2 Expérience devient un flex pour aligner les boutons à droite */
+	.bio :global(h2.exp-section-header) {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 16px;
+		flex-wrap: wrap;
+	}
+
+	/* .exp-controls est injecté en JS → pas de scope Astro, donc :global */
+	:global(.exp-controls) {
+		display: inline-flex;
+		gap: 6px;
+		font-family: var(--font-sans);
+		font-size: 11.5px;
+		font-weight: 400;
+		letter-spacing: 0;
+	}
+	:global(.exp-controls button) {
+		background: transparent;
+		border: 1px solid hsl(var(--theme-text) / 0.2);
+		color: hsl(var(--theme-text) / 0.8);
+		padding: 2px 8px;
+		border-radius: 3px;
+		cursor: pointer;
+		font: inherit;
+		line-height: 1.4;
+		transition: color 0.2s ease, border-color 0.2s ease;
+	}
+	:global(.exp-controls button:hover) {
+		border-color: hsl(var(--theme-accent));
+		color: hsl(var(--theme-accent));
+	}
+
+	.bio :global(details.experience) {
+		border-bottom: 1px solid hsl(var(--theme-text) / 0.1);
+		padding: 14px 0;
+	}
+	.bio :global(details.experience:first-of-type) {
+		border-top: 1px solid hsl(var(--theme-text) / 0.1);
+	}
+	.bio :global(details.experience > summary) {
+		cursor: pointer;
+		list-style: none;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: start;
+		column-gap: 16px;
+	}
+	.bio :global(details.experience > summary::-webkit-details-marker) { display: none; }
+	.bio :global(details.experience > summary::after) {
+		content: "+";
+		grid-column: 2;
+		grid-row: 1 / span 2;
+		align-self: center;
+		font-family: var(--font-mono);
+		font-size: 22px;
+		line-height: 1;
+		opacity: 0.5;
+	}
+	.bio :global(details.experience[open] > summary::after) { content: "−"; }
+	.bio :global(details.experience > summary > h3) {
+		grid-column: 1;
+		margin: 0;
+		font-size: 22px;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+	.bio :global(details.experience > summary > .exp-meta) {
+		grid-column: 1;
+		margin: 4px 0 0;
+		font-size: 14.5px;
+		font-family: var(--font-sans);
+		font-weight: 300;
+		color: hsl(var(--theme-accent));
+	}
+	/* Seul l'employeur/école (entouré de **) reste en gras ; reste du meta en light */
+	.bio :global(details.experience > summary > .exp-meta strong) {
+		font-weight: 600;
+	}
+	.bio :global(details.experience > .exp-body) {
+		margin-top: 12px;
+		padding-left: 0;
+	}
+
+	.bio :global(a) {
+		color: hsl(var(--theme-text));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
+	.bio :global(a:hover) {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+
+	/* ---------- Mobile ---------- */
+	@media (max-width: 860px) {
+		:global(.wrap):has(.resume-layout) { max-width: 760px; }
+		.resume-layout {
+			grid-template-columns: 1fr;
+			gap: 32px;
+		}
+		.sidebar { position: static; }
+		.bio :global(h2) { font-size: 26px; margin: 36px 0 12px; }
+	}
+	@media (max-width: 420px) {
+		.bio { font-size: 16.5px; }
+		.bio :global(h2) { font-size: 24px; }
+	}
+
+	/* ---------- Impression / PDF ---------- */
+	@media print {
+		/* Masquer le chrome du site et les contrôles interactifs */
+		:global(header),
+		:global(footer),
+		:global(.skip-link),
+		:global(.exp-controls),
+		.print-cv {
+			display: none !important;
+		}
+
+		/* Layout une colonne, sans encadré de sidebar */
+		:global(.wrap):has(.resume-layout) { max-width: none; }
+		.resume-layout {
+			grid-template-columns: 1fr;
+			gap: 24px;
+			margin-bottom: 0;
+		}
+		.sidebar {
+			position: static;
+			padding: 0;
+			background: none;
+			border: 0;
+		}
+
+		/* Forcer l'affichage du contenu des expériences (filet en plus du JS beforeprint) */
+		.bio :global(details.experience > .exp-body) { display: block !important; }
+		.bio :global(details.experience > summary::after) { content: ""; }
+
+		/* Couleurs lisibles A4 : noir sur blanc, sans ombres */
+		:global(body),
+		.sidebar,
+		.bio,
+		.sidebar h1,
+		.bio :global(h2),
+		.bio :global(h3) {
+			color: #000 !important;
+			background: #fff !important;
+		}
+		.sidebar .job-title,
+		.bio :global(details.experience > summary > .exp-meta),
+		.bio :global(a) {
+			color: #000 !important;
+		}
+		.bio :global(a) { text-decoration: none; }
+	}
+</style>

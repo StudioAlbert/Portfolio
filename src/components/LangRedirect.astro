@@ -1,0 +1,23 @@
+---
+// Bascule de langue à l'arrivée sur l'accueil par défaut : un visiteur non
+// francophone est envoyé vers la version anglaise. Monté par Base.astro
+// uniquement sur "/" — les liens profonds (/projects/…) ne rebondissent jamais.
+import { type Lang, defaultLang, languages } from "@/i18n/ui";
+import { localizePath } from "@/i18n/utils";
+
+// L'autre langue du site (la seule, aujourd'hui : l'anglais).
+const fallback = (Object.keys(languages) as Lang[]).find((l) => l !== defaultLang) ?? defaultLang;
+const target = localizePath("/", fallback);
+---
+
+{/* Inline et bloquant (comme ThemeProvider) : la bascule doit précéder tout rendu. */}
+<script is:inline define:vars={{ keep: defaultLang, target }}>
+	(() => {
+		try {
+			// Choix explicite mémorisé par le sélecteur de langue, sinon langue du navigateur.
+			const choice = localStorage.getItem("lang");
+			const lang = choice || (navigator.language || "").toLowerCase().split("-")[0];
+			if (lang !== keep) location.replace(target);
+		} catch {}
+	})();
+</script>

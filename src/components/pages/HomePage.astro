@@ -1,0 +1,514 @@
+---
+import { contactIcons } from "@/data/icons";
+import { getAllPosts, getPostSortDate, sortMDByDate } from "@/data/post";
+import { getProjects } from "@/data/project";
+import type { Lang } from "@/i18n/ui";
+import { getEntrySlug, localizePath, useTranslations } from "@/i18n/utils";
+import PageLayout from "@/layouts/Base.astro";
+import { siteConfig } from "@/site-config";
+import { formatRailDate, formatStampDate } from "@/utils/date";
+import { Schema } from "astro-seo-schema";
+
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const allPosts = await getAllPosts(lang);
+const allPostsByDate = sortMDByDate(allPosts);
+const TIMELINE_LIMIT = 5;
+const timelinePosts = allPostsByDate.slice(0, TIMELINE_LIMIT);
+const featured = timelinePosts[0];
+const rest = timelinePosts.slice(1);
+const archiveCount = allPosts.length;
+
+const projects = (await getProjects(lang)).slice(0, 6);
+
+const profile = siteConfig.profile;
+const siteUrl = (path: string) => new URL(localizePath(path, lang), Astro.site).toString();
+const postPath = (id: string) => localizePath(`/posts/${getEntrySlug(id)}/`, lang);
+
+type ContactLink = { label: string; href: string; external: boolean; svg: string };
+const contactLinks: ContactLink[] = [
+	profile?.github && {
+		label: "GitHub",
+		href: profile.github,
+		external: true,
+		svg: contactIcons.github,
+	},
+	profile?.linkedin && {
+		label: "LinkedIn",
+		href: profile.linkedin,
+		external: true,
+		svg: contactIcons.linkedin,
+	},
+	profile?.email && {
+		label: "Email",
+		href: `mailto:${profile.email}`,
+		external: false,
+		svg: contactIcons.email,
+	},
+].filter(Boolean) as ContactLink[];
+---
+
+<Schema
+	item={{
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		itemListElement: [
+			{
+				"@type": "ListItem",
+				position: 1,
+				name: t("nav.home"),
+				item: siteUrl("/"),
+			},
+			{
+				"@type": "ListItem",
+				position: 2,
+				name: t("nav.resume"),
+				item: siteUrl("/resume"),
+			},
+			{
+				"@type": "ListItem",
+				position: 3,
+				name: t("nav.blog"),
+				item: siteUrl("/posts"),
+			},
+			{
+				"@type": "ListItem",
+				position: 4,
+				name: t("nav.projects"),
+				item: siteUrl("/projects"),
+			},
+		],
+	}}
+/>
+
+<PageLayout meta={{ title: "Home", description: t("site.description"), ogImage: t("og.home") }}>
+	<section class="hero">
+		<h1 class="hero-name">{profile?.name ?? siteConfig.author}</h1>
+		<p class="hero-role">{t("profile.jobTitle")}</p>
+		<p class="hero-tagline">{t("site.description")}</p>
+		<ul class="creds" aria-label={t("home.credsLabel")}>
+			<li class="cred cred--accent">Unity Certified Expert — Programmer</li>
+			<li class="cred">{t("home.credTeaching")}</li>
+		</ul>
+		<ul class="contact" aria-label="Contact">
+			{contactLinks.map((c) => (
+				<li>
+					<a
+						href={c.href}
+						{...(c.external ? { rel: "noreferrer", target: "_blank" } : {})}
+					>
+						<span class="contact-icon" set:html={c.svg} />
+						<span>{c.label}</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	</section>
+
+	<section class="teaching" aria-labelledby="experience-label">
+		<div class="section-label" id="experience-label">{t("home.experience")}</div>
+		<p set:html={t("home.experienceText")} />
+		<a class="teaching-link" data-astro-prefetch href={localizePath("/resume/", lang)}>
+			{t("home.experienceLink")}
+		</a>
+	</section>
+
+	{projects.length > 0 && (
+		<section class="work" aria-labelledby="work-label">
+			<div class="section-label" id="work-label">{t("projects.title")}</div>
+			<ul class="work-list">
+				{projects.map((p, idx) => (
+					<li style={`--i: ${idx + 1}`}>
+						<a href={localizePath(`/projects/${getEntrySlug(p.id)}/`, lang)}>
+							<div class="head">
+								<span class="name">{p.data.title}</span>
+								{p.data.stack.length > 0 && (
+									<span class="stack">{p.data.stack.join(" · ")}</span>
+								)}
+								{p.data.featured && <span class="badge">Featured</span>}
+							</div>
+							<p>{p.data.description}</p>
+						</a>
+					</li>
+				))}
+			</ul>
+		</section>
+	)}
+
+	<section class="writing" aria-labelledby="writing-label">
+		<div class="section-label" id="writing-label">Writing</div>
+		<div class="timeline">
+			{
+				featured && (
+					<a
+						class="post featured"
+						data-astro-prefetch
+						href={postPath(featured.id)}
+						style="--i: 0"
+					>
+						<div class="post-rail">
+							<time class="post-date" datetime={getPostSortDate(featured).toISOString()}>
+								{formatRailDate(getPostSortDate(featured))}
+							</time>
+							<span class="post-dot" aria-hidden="true" />
+						</div>
+						<div class="post-body">
+							<div class="post-stamp">Latest · {formatStampDate(getPostSortDate(featured))}</div>
+							<h2 class="post-title">{featured.data.title}</h2>
+							<p class="post-excerpt">{featured.data.description}</p>
+							{!!featured.data.tags?.length && (
+								<div class="post-meta">
+									{featured.data.tags.map((tag, i) => (
+										<Fragment>
+											{i > 0 && <span class="dot">·</span>}
+											<span>{tag}</span>
+										</Fragment>
+									))}
+								</div>
+							)}
+						</div>
+					</a>
+				)
+			}
+
+			{
+				rest.map((p, idx) => (
+					<a
+						class="post"
+						data-astro-prefetch
+						href={postPath(p.id)}
+						style={`--i: ${idx + 1}`}
+					>
+						<div class="post-rail">
+							<time class="post-date" datetime={getPostSortDate(p).toISOString()}>
+								{formatRailDate(getPostSortDate(p))}
+							</time>
+							<span class="post-dot" aria-hidden="true" />
+						</div>
+						<div class="post-body">
+							<h3 class="post-title">{p.data.title}</h3>
+							<p class="post-preview">{p.data.description}</p>
+						</div>
+					</a>
+				))
+			}
+
+			<div class="archive-link" style={`--i: ${rest.length + 1}`}>
+				<a data-astro-prefetch href={localizePath("/posts/", lang)}
+					>View all {archiveCount} posts →</a
+				>
+			</div>
+		</div>
+	</section>
+</PageLayout>
+
+<style>
+	/* ---------- Chapter headers (Expérience / Projets / Writing) ---------- */
+	/* Big serif headings echoing the hero name (a touch smaller), tight spacing. */
+	.section-label {
+		font-family: var(--font-serif);
+		font-size: 34px;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.1;
+		text-transform: none;
+		color: hsl(var(--theme-text));
+		margin-bottom: 14px;
+	}
+
+	/* ---------- Hero ---------- */
+	.hero {
+		margin-bottom: 56px;
+	}
+	.hero-name {
+		font-family: var(--font-serif);
+		font-size: 38px;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.05;
+		color: hsl(var(--theme-text));
+		margin: 0 0 6px;
+	}
+	.hero-role {
+		font-family: var(--font-sans);
+		font-size: 15px;
+		color: hsl(var(--theme-accent));
+		margin: 0 0 22px;
+	}
+	.hero-tagline {
+		font-size: 19.5px;
+		line-height: 1.65;
+		color: hsl(var(--theme-text));
+		margin: 0 0 22px;
+		max-width: 60ch;
+		text-wrap: pretty;
+	}
+	.creds {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 0;
+		margin: 0 0 4px;
+	}
+	.cred {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		letter-spacing: 0.02em;
+		line-height: 1.4;
+		color: hsl(var(--theme-text) / 0.8);
+		padding: 3px 10px;
+		border: 1px solid var(--hairline);
+		border-radius: 999px;
+		white-space: nowrap;
+	}
+	.cred--accent {
+		color: hsl(var(--theme-accent));
+		border-color: hsl(var(--theme-accent) / 0.55);
+	}
+	.contact {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 20px;
+		padding: 0;
+		margin: 18px 0 0;
+		font-family: var(--font-sans);
+		font-size: 13.5px;
+	}
+	.contact a {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		color: hsl(var(--theme-text-muted));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition: color 0.2s ease, text-decoration-color 0.2s ease;
+	}
+	.contact a:hover {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+	.contact a:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+	.contact-icon {
+		display: inline-flex;
+	}
+	.contact-icon :global(svg) {
+		width: 16px;
+		height: 16px;
+	}
+
+	/* ---------- Teaching highlight ---------- */
+	.teaching {
+		margin-bottom: 56px;
+	}
+	.teaching p {
+		font-size: 17px;
+		line-height: 1.62;
+		color: hsl(var(--theme-text-muted));
+		margin: 0 0 14px;
+		max-width: 60ch;
+		text-wrap: pretty;
+	}
+	.teaching p strong {
+		color: hsl(var(--theme-text));
+		font-weight: 600;
+	}
+	.teaching-link {
+		display: inline-block;
+		font-family: var(--font-sans);
+		font-size: 13.5px;
+		color: hsl(var(--theme-text-muted));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition: color 0.2s ease, text-decoration-color 0.2s ease;
+	}
+	.teaching-link:hover {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+	.teaching-link:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+
+	/* ---------- Writing timeline ---------- */
+	.writing {
+		margin-bottom: 96px;
+	}
+	/* ---------- Featured post ---------- */
+	.post.featured .post-body {
+		padding-bottom: 56px;
+	}
+	.post.featured .post-stamp {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: hsl(var(--theme-accent));
+		margin-bottom: 12px;
+	}
+	.post.featured .post-title {
+		font-size: 30px;
+		line-height: 1.14;
+		margin-bottom: 14px;
+		letter-spacing: -0.02em;
+	}
+	.post.featured .post-excerpt {
+		font-size: 18px;
+		line-height: 1.62;
+		color: hsl(var(--theme-text-muted));
+		margin: 0 0 16px;
+		max-width: 58ch;
+		word-wrap: break-word;
+		overflow-wrap: anywhere;
+	}
+	.post.featured .post-meta {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		color: hsl(var(--theme-text) / 0.72);
+		font-variant-numeric: tabular-nums;
+		font-feature-settings: "tnum";
+	}
+	.post.featured .post-meta .dot {
+		color: var(--faint);
+		margin: 0 8px;
+	}
+	.post.featured .post-dot {
+		--rail-dot-size: 11px;
+		border-color: hsl(var(--theme-text-muted));
+	}
+	.post.featured:hover .post-dot {
+		background: hsl(var(--theme-accent));
+		border-color: hsl(var(--theme-accent));
+	}
+
+	.archive-link {
+		grid-column: 2;
+		margin-top: 8px;
+		font-family: var(--font-sans);
+		font-size: 13.5px;
+		color: hsl(var(--theme-text) / 0.72);
+	}
+	.archive-link a {
+		display: inline-block;
+		padding: 6px 0;
+		color: hsl(var(--theme-text-muted));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition: color 0.2s ease, text-decoration-color 0.2s ease;
+	}
+	.archive-link a:hover {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+
+	.work {
+		margin-bottom: 56px;
+	}
+
+	.archive-link a:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+
+	@media (max-width: 720px) {
+		.section-label {
+			font-size: 29px;
+		}
+		.hero {
+			margin-bottom: 44px;
+		}
+		.hero-name {
+			font-size: 32px;
+		}
+		.hero-tagline {
+			font-size: 18px;
+		}
+		.post.featured .post-rail {
+			display: none;
+		}
+		.post.featured .post-body {
+			padding-bottom: 24px;
+			border-bottom: 1px solid var(--hairline);
+			margin-bottom: 4px;
+		}
+		.post.featured .post-title {
+			font-size: 22px;
+			line-height: 1.2;
+			letter-spacing: -0.015em;
+			margin-bottom: 10px;
+		}
+		.post.featured .post-excerpt {
+			font-size: 15.5px;
+			line-height: 1.55;
+			margin: 0 0 10px;
+		}
+		.post.featured .post-meta {
+			font-size: 11px;
+		}
+		.archive-link {
+			margin-top: 0;
+		}
+	}
+
+	@media (max-width: 420px) {
+		.section-label {
+			font-size: 24px;
+		}
+		/* Le badge enseignement (long en français) dépasse la largeur d'écran :
+		   on le laisse passer sur deux lignes plutôt que d'être rogné. */
+		.cred {
+			white-space: normal;
+			max-width: 100%;
+		}
+		.hero {
+			margin-bottom: 40px;
+		}
+		.hero-name {
+			font-size: 26px;
+		}
+		.hero-tagline {
+			font-size: 17px;
+		}
+		.contact {
+			font-size: 12.5px;
+			gap: 8px 16px;
+		}
+		.teaching {
+			margin-bottom: 40px;
+		}
+		.teaching p {
+			font-size: 15.5px;
+		}
+		.writing {
+			margin-bottom: 64px;
+		}
+		.post.featured .post-title {
+			font-size: 17px;
+		}
+		.post.featured .post-excerpt {
+			font-size: 15px;
+		}
+		.work {
+			margin-bottom: 40px;
+		}
+	}
+</style>

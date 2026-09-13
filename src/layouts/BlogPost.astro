@@ -5,20 +5,25 @@ import { Image } from "astro:assets";
 import ShareButtons from "@/components/blog/ShareButtons.astro";
 import WebMentions from "@/components/blog/webmentions/index.astro";
 import { getAllPosts, getPostSortDate, sortMDByDate } from "@/data/post";
+import type { Lang } from "@/i18n/ui";
+import { getEntrySlug, localizePath } from "@/i18n/utils";
 import { siteConfig } from "@/site-config";
 import { formatBylineDate, formatEyebrowDate } from "@/utils/date";
-import { absoluteUrl, withBase } from "@/utils/path";
+import { absoluteUrl } from "@/utils/path";
 
 import BaseLayout from "./Base.astro";
 import { Schema } from "astro-seo-schema";
 
 interface Props {
 	post: CollectionEntry<"post">;
+	lang: Lang;
+	/** false si le post n'existe pas dans l'autre langue (le sélecteur renvoie alors vers la liste). */
+	hasTranslation: boolean;
 }
 
-const { post } = Astro.props;
+const { post, lang, hasTranslation } = Astro.props;
 
-const sortedAll = sortMDByDate(await getAllPosts());
+const sortedAll = sortMDByDate(await getAllPosts(lang));
 const idx = sortedAll.findIndex((p) => p.id === post.id);
 const newerPost = idx > 0 ? sortedAll[idx - 1] : undefined;
 const olderPost = idx >= 0 && idx < sortedAll.length - 1 ? sortedAll[idx + 1] : undefined;
@@ -32,7 +37,7 @@ const { remarkPluginFrontmatter } = await render(post);
 
 const authorName = siteConfig.profile?.name ?? siteConfig.author;
 const comments = siteConfig.comments;
-const postUrl = absoluteUrl(`/posts/${slug}/`, Astro.site);
+const postUrl = new URL(localizePath(`/posts/${getEntrySlug(slug)}/`, lang), Astro.site).toString();
 const socialImageAbsolute = absoluteUrl(socialImage, Astro.site);
 
 // "Posts · Month YYYY"
@@ -71,7 +76,10 @@ const giscusThemes = import.meta.env.PROD
 	}}
 />
 
-<BaseLayout meta={{ articleDate, description, ogImage: socialImage, title }}>
+<BaseLayout
+	meta={{ articleDate, description, ogImage: socialImage, title }}
+	alternatePath={hasTranslation ? undefined : "/posts/"}
+>
 	<div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
 	<div class="post-shell">
 		<div class="post-main" data-pagefind-body>
@@ -135,13 +143,13 @@ const giscusThemes = import.meta.env.PROD
 			{(olderPost || newerPost) && (
 				<nav class="post-pager" aria-label="More posts">
 					{olderPost && (
-						<a class="pager-link prev" data-astro-prefetch href={withBase(`/posts/${olderPost.id}/`)}>
+						<a class="pager-link prev" data-astro-prefetch href={localizePath(`/posts/${getEntrySlug(olderPost.id)}/`, lang)}>
 							<span class="pager-eyebrow">Older</span>
 							<span class="pager-title">{olderPost.data.title}</span>
 						</a>
 					)}
 					{newerPost && (
-						<a class="pager-link next" data-astro-prefetch href={withBase(`/posts/${newerPost.id}/`)}>
+						<a class="pager-link next" data-astro-prefetch href={localizePath(`/posts/${getEntrySlug(newerPost.id)}/`, lang)}>
 							<span class="pager-eyebrow">Newer</span>
 							<span class="pager-title">{newerPost.data.title}</span>
 						</a>

@@ -5,8 +5,8 @@ import { getEntrySlug } from "@/i18n/utils";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 
 export const getStaticPaths = (async () => {
-	const projects = await getProjects("fr");
-	const translated = new Set((await getProjects("en")).map((p) => getEntrySlug(p.id)));
+	const projects = await getProjects("en");
+	const translated = new Set((await getProjects("fr")).map((p) => getEntrySlug(p.id)));
 	return projects.map((entry) => {
 		const slug = getEntrySlug(entry.id);
 		return { params: { slug }, props: { entry, hasTranslation: translated.has(slug) } };
@@ -18,4 +18,4 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { entry, hasTranslation } = Astro.props;
 ---
 
-<ProjectPage entry={entry} hasTranslation={hasTranslation} lang="fr" />
+<ProjectPage entry={entry} hasTranslation={hasTranslation} lang="en" />

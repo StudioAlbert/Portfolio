@@ -6,7 +6,7 @@ import type { CollectionEntry } from "astro:content";
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const MAX_POSTS_PER_PAGE = 1000;
-	const allPostsByDate = sortMDByDate(await getAllPosts("fr"));
+	const allPostsByDate = sortMDByDate(await getAllPosts("en"));
 	return paginate(allPostsByDate, { pageSize: MAX_POSTS_PER_PAGE });
 }) satisfies GetStaticPaths;
 
@@ -17,4 +17,4 @@ interface Props {
 const { page } = Astro.props;
 ---
 
-<PostsPage page={page} lang="fr" />
+<PostsPage page={page} lang="en" />

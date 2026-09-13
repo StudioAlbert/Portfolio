@@ -1,3 +1,3 @@
 import { getRssFeed } from "@/utils/rss";
 
-export const GET = () => getRssFeed("fr");
+export const GET = () => getRssFeed("en");

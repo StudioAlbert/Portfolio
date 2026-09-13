@@ -1,5 +1,6 @@
 // Génère les cartes social statiques (Open Graph) à la charte du site.
-// Usage : `node scripts/generate-og-cards.mjs`
+// Usage : `node scripts/generate-og-cards.mjs`          → toutes les cartes
+//         `node scripts/generate-og-cards.mjs og/en`    → seulement celles dont le chemin commence par og/en
 // Les PNG produits sont des fichiers statiques (commités) dans public/.
 // Édite le tableau CARDS ci-dessous puis relance pour les régénérer.
 
@@ -27,6 +28,7 @@ const fonts = [
 const HOST = "studioalbert.github.io";
 
 // eyebrow = libellé mono cuivre · title = gros titre serif · subtitle = sous-titre serif
+// Les chemins `out` sont référencés dans src/i18n/ui.ts (clés og.*).
 const CARDS = [
 	{
 		out: "social-card.png", // fallback générique (404, pages sans carte dédiée)
@@ -52,6 +54,33 @@ const CARDS = [
 		eyebrow: "CV",
 		title: "Sebastien Albert",
 		subtitle: "Programmeur Gameplay & IA · Enseignant — SAE Institute Genève",
+	},
+
+	// Version anglaise (/en/)
+	{
+		out: "og/en/social-card.png", // fallback des pages anglaises
+		eyebrow: "Portfolio",
+		title: "Sebastien Albert",
+		subtitle: "Gameplay & AI Programmer · Real-time Systems",
+	},
+	{
+		out: "og/en/home.png",
+		eyebrow: "Home",
+		title: "Sebastien Albert",
+		subtitle:
+			"I design gameplay, AI and real-time interactive systems for games — and train the next generation of game programmers.",
+	},
+	{
+		out: "og/en/projects.png",
+		eyebrow: "Projects",
+		title: "Projects",
+		subtitle: "Unity games, experiments, prototypes.",
+	},
+	{
+		out: "og/en/cv.png",
+		eyebrow: "CV",
+		title: "Sebastien Albert",
+		subtitle: "Gameplay & AI Programmer · Lecturer — SAE Institute Geneva",
 	},
 ];
 
@@ -79,7 +108,11 @@ const markup = (c) =>
 		</div>
 	</div>`;
 
-for (const card of CARDS) {
+// Filtre optionnel : évite de régénérer (et donc de re-commiter) les cartes déjà à jour.
+const only = process.argv[2];
+const cards = CARDS.filter((c) => !only || c.out.startsWith(only));
+
+for (const card of cards) {
 	const svg = await satori(markup(card), { width: 1200, height: 630, fonts });
 	const png = new Resvg(svg).render().asPng();
 	const outPath = path.join(publicDir, card.out);

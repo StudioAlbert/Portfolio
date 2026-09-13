@@ -9,6 +9,7 @@ import webmanifest from "astro-webmanifest";
 import { defineConfig } from "astro/config";
 import { expressiveCodeOptions } from "./src/site.config";
 import { siteConfig } from "./src/site.config";
+import { defaultLang, locales } from "./src/i18n/ui";
 import partytown from "@astrojs/partytown";
 
 import remarkDirective from "remark-directive";
@@ -52,6 +53,13 @@ export default defineConfig({
 			changefreq: "weekly",
 			priority: 0.7,
 			lastmod: new Date(),
+			// Alternates hreflang du sitemap : FR à la racine, EN sous /en/
+			i18n: {
+				defaultLocale: defaultLang,
+				locales: Object.fromEntries(
+					Object.entries(locales).map(([lang, l]) => [lang, l.hreflang]),
+				),
+			},
 		}),
 		mdx(),
 		robotsTxt(),

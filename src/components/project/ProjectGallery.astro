@@ -1,4 +1,6 @@
 ---
+import type { Lang } from "@/i18n/ui";
+import { useTranslations } from "@/i18n/utils";
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 
@@ -10,9 +12,11 @@ type MediaItem =
 interface Props {
 	media: MediaItem[];
 	title: string;
+	lang: Lang;
 }
 
-const { media, title } = Astro.props;
+const { media, title, lang } = Astro.props;
+const t = useTranslations(lang);
 const multiple = media.length > 1;
 ---
 
@@ -21,8 +25,9 @@ const multiple = media.length > 1;
 		<section
 			class="gallery"
 			data-embla
-			aria-roledescription="carrousel"
-			aria-label={`Galerie — ${title}`}
+			data-yt-title={t("gallery.youtubeTitle")}
+			aria-roledescription={t("gallery.roleDescription")}
+			aria-label={`${t("gallery.label")} — ${title}`}
 		>
 			<div class="embla">
 				<div class="embla__viewport" tabindex="0">
@@ -53,7 +58,7 @@ const multiple = media.length > 1;
 								)}
 								{item.type === "youtube" && (
 									<div class="gallery__yt" data-yt-id={item.id}>
-										<button class="gallery__yt-btn" type="button" aria-label="Lire la vidéo">
+										<button class="gallery__yt-btn" type="button" aria-label={t("gallery.playVideo")}>
 											<img
 												class="gallery__media gallery__yt-thumb"
 												src={`https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`}
@@ -71,12 +76,12 @@ const multiple = media.length > 1;
 
 				{multiple && (
 					<>
-						<button class="gallery__btn gallery__btn--prev" type="button" aria-label="Média précédent">
+						<button class="gallery__btn gallery__btn--prev" type="button" aria-label={t("gallery.prev")}>
 							<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
 								<path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
 							</svg>
 						</button>
-						<button class="gallery__btn gallery__btn--next" type="button" aria-label="Média suivant">
+						<button class="gallery__btn gallery__btn--next" type="button" aria-label={t("gallery.next")}>
 							<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
 								<path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
 							</svg>
@@ -88,13 +93,13 @@ const multiple = media.length > 1;
 			<div class="gallery__footer">
 				<p class="gallery__caption" hidden />
 				{multiple && (
-					<div class="gallery__dots" role="tablist" aria-label="Sélection du média">
+					<div class="gallery__dots" role="tablist" aria-label={t("gallery.dots")}>
 						{media.map((_, i) => (
 							<button
 								class="gallery__dot"
 								type="button"
 								role="tab"
-								aria-label={`Aller au média ${i + 1}`}
+								aria-label={`${t("gallery.goTo")} ${i + 1}`}
 							/>
 						))}
 					</div>
@@ -302,7 +307,7 @@ const multiple = media.length > 1;
 			// target it — size it inline so it always fills the slide.
 			iframe.style.cssText = "position:absolute;inset:0;width:100%;height:100%;border:0;";
 			iframe.src = `https://www.youtube-nocookie.com/embed/${wrap.dataset.ytId}?autoplay=1&rel=0`;
-			iframe.title = "Vidéo YouTube";
+			iframe.title = root.dataset.ytTitle ?? "";
 			iframe.allow =
 				"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
 			iframe.allowFullscreen = true;

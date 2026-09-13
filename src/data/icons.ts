@@ -7,3 +7,10 @@ export const contactIcons = {
 	email:
 		'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="3.2" width="13" height="9.6" rx="1.5"/><path d="m2.2 4.2 5.8 4.4 5.8-4.4"/></svg>',
 } as const;
+
+// Drapeaux du sélecteur de langue. SVG inline plutôt qu'emoji : Windows n'affiche
+// pas les emoji drapeaux. Même ratio 4:3 pour les deux, dimension fixée en CSS.
+export const flagIcons = {
+	fr: '<svg viewBox="0 0 16 12" aria-hidden="true"><rect width="16" height="12" fill="#fff"/><rect width="5.34" height="12" fill="#0055a4"/><rect x="10.66" width="5.34" height="12" fill="#ef4135"/></svg>',
+	en: '<svg viewBox="0 0 60 45" aria-hidden="true"><clipPath id="uk-flag-clip"><path d="M30,22.5 h30 v22.5 z v22.5 h-30 z h-30 v-22.5 z v-22.5 h30 z"/></clipPath><rect width="60" height="45" fill="#012169"/><path d="M0,0 60,45 M60,0 0,45" stroke="#fff" stroke-width="9"/><path d="M0,0 60,45 M60,0 0,45" clip-path="url(#uk-flag-clip)" stroke="#c8102e" stroke-width="6"/><path d="M30,0 V45 M0,22.5 H60" stroke="#fff" stroke-width="15"/><path d="M30,0 V45 M0,22.5 H60" stroke="#c8102e" stroke-width="9"/></svg>',
+} as const;

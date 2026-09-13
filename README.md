@@ -95,6 +95,30 @@ tags: [ tag-one, tag-two ]
 The about page is also markdown, at `src/content/page/about.md`. Showcase entries are typed objects in
 `src/data/showcase.ts`; empty the array and the Showcase tab is hidden automatically.
 
+## English version
+
+The site is bilingual: French (default) at the root, English under `/en/` with the same slugs.
+
+- **UI strings** that differ between languages live in `src/i18n/ui.ts` (`ui.fr` / `ui.en` — a missing
+  English key fails `astro check`). Helpers `useTranslations`, `localizePath` and `getLangFromUrl` are in
+  `src/i18n/utils.ts`. Labels inherited in English from the theme (Writing, Share, Dark/Light…) stay hard-coded.
+- **Pages**: markup and styles live in `src/components/pages/`; the files in `src/pages/` and
+  `src/pages/en/` are thin wrappers that pass `lang`.
+- **Content**: a translation goes into an `en/` subfolder of its collection, under the same file name as the
+  French entry — `src/content/project/en/<slug>.md`, `src/content/page/en/resume.md`,
+  `src/content/post/en/<slug>.md`. Frontmatter is duplicated (dates, stack, demo, gallery); shared images are
+  referenced as `../_media/...`.
+- **Language switcher** (header): links to the same page in the other language. When a project or post has no
+  translation, it points at the section index instead and no `hreflang` is emitted for that page.
+- **Default language on arrival**: the root page carries a small blocking script
+  (`src/components/LangRedirect.astro`) that sends visitors to `/en/` unless their browser language is French.
+  An explicit click on the switcher is remembered in `localStorage.lang` (`"fr"` / `"en"`) and always wins — clear
+  that key to test the detection again. Only `/` redirects: deep links such as `/projects/aiguillages/` never
+  bounce, and crawlers (which do not run the script) still index `/` as the French home.
+- **OG cards**: English cards live in `public/og/en/` — regenerate them with
+  `node scripts/generate-og-cards.mjs og/en`.
+- **CV PDF**: `cv/cv-en.html` → `public/CV_Sebastien_Albert_EN.pdf` (see `cv/README.md`).
+
 ## Project layout
 
 ```

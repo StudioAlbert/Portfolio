@@ -1,30 +1,52 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
+import LangRedirect from "@/components/LangRedirect.astro";
 import SkipLink from "@/components/SkipLink.astro";
 import ThemeProvider from "@/components/ThemeProvider.astro";
 import Footer from "@/components/layout/Footer.astro";
 import Header from "@/components/layout/Header.astro";
-import { siteConfig } from "@/site-config";
+import { defaultLang, locales } from "@/i18n/ui";
+import { getLangFromUrl, getNeutralPath, useTranslations } from "@/i18n/utils";
 import type { SiteMeta } from "@/types";
 
 interface Props {
 	meta: SiteMeta;
+	/**
+	 * Chemin (sans base ni préfixe de langue) de cette page dans l'autre langue.
+	 * Par défaut : la page miroir. Passer un autre chemin (ex. "/projects/") quand la
+	 * traduction n'existe pas : le sélecteur y renvoie et aucun hreflang n'est émis.
+	 */
+	alternatePath?: string;
 }
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const currentPath = getNeutralPath(Astro.url);
+
 const {
-	meta: { articleDate, description = siteConfig.description, ogImage, title },
+	meta: { articleDate, description = t("site.description"), ogImage, title },
+	alternatePath = currentPath,
 } = Astro.props;
+const hreflangPath = alternatePath === currentPath ? currentPath : undefined;
 ---
 
-<html class="scroll-smooth" lang={siteConfig.lang}>
+<html class="scroll-smooth" lang={locales[lang].htmlLang}>
 	<head>
+		{lang === defaultLang && currentPath === "/" && <LangRedirect />}
 		<ThemeProvider />
-		<BaseHead articleDate={articleDate} description={description} ogImage={ogImage} title={title} />
+		<BaseHead
+			articleDate={articleDate}
+			description={description}
+			hreflangPath={hreflangPath}
+			lang={lang}
+			ogImage={ogImage}
+			title={title}
+		/>
 	</head>
 	<body>
 		<SkipLink />
 		<div class="wrap">
-			<Header />
+			<Header alternatePath={alternatePath} lang={lang} />
 			<main id="main">
 				<slot />
 			</main>
