@@ -19,10 +19,17 @@ Trois versions, même gabarit (`cv.css`, `photo.jpg`) :
 
 ### Automatique (recommandé)
 
-Depuis la racine du repo, une seule commande via Edge headless (Chrome marche aussi) :
+Depuis la racine du repo, une commande par variante via Edge headless (Chrome marche aussi).
+Edge récent s'installe sous `EdgeCore\<version>\`, pas sous `Edge\Application\` : on résout le
+chemin une fois plutôt que de le coder en dur.
 
 ```powershell
-& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" `
+$edge = (Get-ChildItem "C:\Program Files (x86)\Microsoft\EdgeCore" -Directory |
+  Sort-Object Name -Descending | Select-Object -First 1).FullName + "\msedge.exe"
+```
+
+```powershell
+& $edge `
   --headless=new --disable-gpu --no-pdf-header-footer `
   --print-to-pdf="$PWD\public\CV_Sebastien_Albert.pdf" `
   "file:///$($PWD -replace '\\','/')/cv/cv.html"
@@ -34,7 +41,7 @@ Le PDF est généré directement dans `public/` pour être téléchargeable depu
 Pour la **variante industrie**, même commande en remplaçant les deux noms de fichier :
 
 ```powershell
-& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" `
+& $edge `
   --headless=new --disable-gpu --no-pdf-header-footer `
   --print-to-pdf="$PWD\public\CV_Sebastien_Albert_Industrie.pdf" `
   "file:///$($PWD -replace '\\','/')/cv/cv-industrie.html"
@@ -43,7 +50,7 @@ Pour la **variante industrie**, même commande en remplaçant les deux noms de f
 Et pour la **variante anglaise** :
 
 ```powershell
-& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" `
+& $edge `
   --headless=new --disable-gpu --no-pdf-header-footer `
   --print-to-pdf="$PWD\public\CV_Sebastien_Albert_EN.pdf" `
   "file:///$($PWD -replace '\\','/')/cv/cv-en.html"
