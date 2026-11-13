@@ -87,7 +87,7 @@ const CARDS = [
 const titleSize = (t) => (t.length > 28 ? 64 : t.length > 18 ? 76 : 88);
 
 const markup = (c) =>
-	html`<div tw="flex flex-col w-full h-full px-20 py-16" style="background-color: #1a1715; font-family: Newsreader;">
+	html(`<div tw="flex flex-col w-full h-full px-20 py-16" style="background-color: #1a1715; font-family: Newsreader;">
 		<p tw="text-2xl mb-8 tracking-widest uppercase" style="font-family: JetBrains Mono; color: #c89761;">
 			${c.eyebrow}
 		</p>
@@ -106,7 +106,7 @@ const markup = (c) =>
 				${HOST}
 			</p>
 		</div>
-	</div>`;
+	</div>`);
 
 // Filtre optionnel : évite de régénérer (et donc de re-commiter) les cartes déjà à jour.
 const only = process.argv[2];
