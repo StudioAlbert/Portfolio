@@ -90,7 +90,6 @@ const contactLinks: ContactLink[] = [
 	<section class="hero">
 		<h1 class="hero-name">{profile?.name ?? siteConfig.author}</h1>
 		<p class="hero-role">{t("profile.jobTitle")}</p>
-		<p class="hero-tagline">{t("site.description")}</p>
 		<ul class="creds" aria-label={t("home.credsLabel")}>
 			<li class="cred cred--accent">Unity Certified Expert — Programmer</li>
 			<li class="cred">{t("home.credTeaching")}</li>
@@ -239,14 +238,6 @@ const contactLinks: ContactLink[] = [
 		font-size: 15px;
 		color: hsl(var(--theme-accent));
 		margin: 0 0 22px;
-	}
-	.hero-tagline {
-		font-size: 19.5px;
-		line-height: 1.65;
-		color: hsl(var(--theme-text));
-		margin: 0 0 22px;
-		max-width: 60ch;
-		text-wrap: pretty;
 	}
 	.creds {
 		list-style: none;
@@ -439,9 +430,6 @@ const contactLinks: ContactLink[] = [
 		.hero-name {
 			font-size: 32px;
 		}
-		.hero-tagline {
-			font-size: 18px;
-		}
 		.post.featured .post-rail {
 			display: none;
 		}
@@ -484,9 +472,6 @@ const contactLinks: ContactLink[] = [
 		}
 		.hero-name {
 			font-size: 26px;
-		}
-		.hero-tagline {
-			font-size: 17px;
 		}
 		.contact {
 			font-size: 12.5px;

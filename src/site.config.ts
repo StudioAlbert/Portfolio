@@ -54,10 +54,11 @@ export const menuLinks: { path: string; key: UIKey }[] = [
 		path: "/resume/",
 		key: "nav.resume",
 	},
-	{
-		path: "/posts/",
-		key: "nav.blog",
-	},
+	// Onglet Blog masque pour le moment : les pages /posts/ restent en ligne.
+	// {
+	// 	path: "/posts/",
+	// 	key: "nav.blog",
+	// },
 	{
 		path: "/projects/",
 		key: "nav.projects",
