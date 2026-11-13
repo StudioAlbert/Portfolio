@@ -25,7 +25,7 @@ const fonts = [
 	{ data: font("jetbrainsmono-regular.ttf"), name: "JetBrains Mono", style: "normal", weight: 400 },
 ];
 
-const HOST = "studioalbert.github.io";
+const HOST = "www.studio-albert.com";
 
 // eyebrow = libellé mono cuivre · title = gros titre serif · subtitle = sous-titre serif
 // Les chemins `out` sont référencés dans src/i18n/ui.ts (clés og.*).
