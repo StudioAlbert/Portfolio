@@ -40,8 +40,7 @@ const CARDS = [
 		out: "og/accueil.png",
 		eyebrow: "Accueil",
 		title: "Sebastien Albert",
-		subtitle:
-			"Je conçois le gameplay, l'IA et les systèmes interactifs temps réel des jeux, et je forme les programmeurs de demain.",
+		subtitle: "Programmeur Gameplay & IA · Systèmes temps réel",
 	},
 	{
 		out: "og/projets.png",
@@ -67,8 +66,7 @@ const CARDS = [
 		out: "og/en/home.png",
 		eyebrow: "Home",
 		title: "Sebastien Albert",
-		subtitle:
-			"I design gameplay, AI and real-time interactive systems for games — and train the next generation of game programmers.",
+		subtitle: "Gameplay & AI Programmer · Real-time Systems",
 	},
 	{
 		out: "og/en/projects.png",
