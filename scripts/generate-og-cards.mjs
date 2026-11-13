@@ -52,7 +52,8 @@ const CARDS = [
 		out: "og/cv.png",
 		eyebrow: "CV",
 		title: "Sebastien Albert",
-		subtitle: "Programmeur Gameplay & IA · Systèmes temps réel",
+		// Plus fourni que les autres cartes personne : c'est la carte du CV.
+		subtitle: "Programmeur Gameplay & IA · Enseignant — SAE Institute Genève",
 	},
 
 	// Version anglaise (/en/)
@@ -78,7 +79,7 @@ const CARDS = [
 		out: "og/en/cv.png",
 		eyebrow: "CV",
 		title: "Sebastien Albert",
-		subtitle: "Gameplay & AI Programmer · Real-time Systems",
+		subtitle: "Gameplay & AI Programmer · Lecturer — SAE Institute Geneva",
 	},
 ];
 
