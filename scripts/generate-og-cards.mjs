@@ -46,13 +46,13 @@ const CARDS = [
 		out: "og/projets.png",
 		eyebrow: "Projets",
 		title: "Projets",
-		subtitle: "Jeux Unity, expérimentations, prototypes.",
+		subtitle: "Jeux Unity, expérimentations, prototypes",
 	},
 	{
 		out: "og/cv.png",
 		eyebrow: "CV",
 		title: "Sebastien Albert",
-		subtitle: "Programmeur Gameplay & IA · Enseignant — SAE Institute Genève",
+		subtitle: "Programmeur Gameplay & IA · Systèmes temps réel",
 	},
 
 	// Version anglaise (/en/)
@@ -72,13 +72,13 @@ const CARDS = [
 		out: "og/en/projects.png",
 		eyebrow: "Projects",
 		title: "Projects",
-		subtitle: "Unity games, experiments, prototypes.",
+		subtitle: "Unity games, experiments, prototypes",
 	},
 	{
 		out: "og/en/cv.png",
 		eyebrow: "CV",
 		title: "Sebastien Albert",
-		subtitle: "Gameplay & AI Programmer · Lecturer — SAE Institute Geneva",
+		subtitle: "Gameplay & AI Programmer · Real-time Systems",
 	},
 ];
 
